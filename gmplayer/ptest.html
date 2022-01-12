@@ -1,0 +1,500 @@
+<html>
+<body>
+<script type="text/javascript">
+    function WebMidiLink() {
+        function Synth(win) {
+            this.win = win;
+	    this.ch = "0";
+            this.notes = new Array();
+        }
+        this.table=new Array();
+        this.AddSynth = function(url) {
+            var synth = new Synth(window.open(url, null, "width=900,height=670,scrollbars=yes,resizable=yes"));
+            this.table.push(synth);
+            return synth;
+        }
+        this.DelSynth = function(synth) {
+            synth.win.close();
+        }
+	this.SetCh = function(synth,c) {
+	    if(c>=1 && c<=16)
+                synth.ch=(c-1).toString(16);
+	}
+        this.NoteOn = function(synth, n, v) {
+            this.SendMessage(synth, "midi,9"+synth.ch+","+n.toString(16)+","+v.toString(16));
+        }
+        this.NoteOff = function(synth, n) {
+            this.SendMessage(synth, "midi,8"+synth.ch+"," + n.toString(16) + ",0");
+        }
+        this.AllOff = function() {
+            for(var i=0;i<this.table.length;++i) {
+                this.SendMessage(this.table[i], "midi,b"+this.table[i].ch+",78,0");
+	    }
+        }
+	this.Vol = function(synth,v) {
+	    this.SendMessage(synth, "midi,b"+synth.ch+",7,"+v.toString(16));
+	}
+	this.Prog = function(synth,p) {
+	    this.SendMessage(synth, "midi,c"+synth.ch+","+p.toString(16));
+	}
+        this.SendMessage=function(synth, s) {
+	    if(synth!=null)
+	        synth.win.postMessage(s,"*");
+        }
+    }
+
+
+
+    function Sequencer() {
+        this.trk = new Array(3);
+        this.timer = null;
+        this.lasttick = 0;
+        this.isplay = false;
+        for (var i = 0; i < 3; ++i) {
+            this.trk[i] = new Track();
+        }
+        this.Process = function() {
+            var t = new Date() - seq.time0;
+            if (t >= seq.lasttick) {
+                var delta = (t - seq.lasttick) * 0.001;
+                for (var i = 0; i < 3; ++i) {
+                    seq.trk[i].Process(delta);
+                }
+                seq.lasttick = t;
+            }
+        }
+        this.Play = function() {
+            if (this.isplay == true)
+                return;
+            this.time0 = new Date();
+            for (var i = 0; i < 3; ++i)
+                this.trk[i].Play();
+            this.lasttick = 0;
+            this.timer = setInterval(this.Process, 5);
+            this.isplay = true;
+        }
+        this.Stop = function() {
+            if (this.isplay == false)
+                return;
+            this.isplay = false;
+            if (this.timer != null) {
+                clearInterval(this.timer);
+                this.timer = null;
+                wml.AllOff();
+            }
+        }
+    }
+    function Track() {
+        this.mml = "";
+        this.dur = 0;
+        this.synth = null;
+        this.notes = new Array();
+        this.SetSynth = function(synth) {
+            if (this.synth != null) {
+                wml.DelSynth(this.synth);
+            }
+            this.synth = synth;
+        }
+        this.SetMML = function(mml) {
+            this.mml = mml.toLowerCase();
+        }
+        this.Play = function() {
+            this.tempo = 120;
+            this.deflen = 8;
+            this.oct = 3;
+            this.index = 0;
+            this.dur = 0;
+        }
+        this.GetNum = function() {
+            var n = 0;
+	    if(this.mml[this.index] >= '0' && this.mml[this.index] <= '9') {
+	        while (this.mml[this.index] >= '0' && this.mml[this.index] <= '9') {
+        	    n = n * 10 + parseInt(this.mml[this.index]);
+                    ++this.index;
+                }
+                return n;
+	    }
+	    return -1;
+        }
+        this.Event = function(n) {
+            ++this.index;
+            var n2 = n;
+	    var st;
+            while (1) {
+                switch (this.mml[this.index]) {
+                    case '+':
+                    case '#':
+                        ++n2;
+                        ++this.index;
+                        break;
+                    case '-':
+                        --n2;
+                        ++this.index;
+                        break;
+                    default:
+                        var len;
+                        len = this.GetNum();
+                        if (len < 0)
+                            len = this.deflen;
+                        var len2 = len;
+                        while (this.mml[this.index] == '.') {
+                            ++this.index;
+                            len2 = len / 2;
+                            len += len2;
+                        }
+			if(len>0)
+                            st = 240 / (this.tempo * len);
+		        else
+			    st=0;
+                        if (this.mml[this.index] == '&') {
+                            ++this.index;
+                            this.gt = st;
+                        }
+                        else {
+                            this.gt = st * 0.9;
+			}
+                        this.dur += st;
+                        if (n >= 0) {
+                            var note = (this.oct + 1) * 12 + n2;
+                            wml.NoteOn(this.synth, note, 64);
+			    this.notes.push(note);
+                        }
+                        return;
+                }
+            }
+        }
+        this.Process = function(t) {
+            if (this.dur > 0) {
+                this.dur -= t;
+            }
+            if (this.gt > 0) {
+                if ((this.gt -= t) <= 0) {
+		    for(var i=0;i<this.notes.length;++i)
+                        wml.NoteOff(this.synth, this.notes[i]);
+		    this.notes.length=0;
+                }
+            }
+            while (this.dur <= 0) {
+                if (this.index >= this.mml.length) {
+                    break;
+                }
+		if (this.index < this.mml.length-1) {
+		    if(this.mml[this.index]=='c' && this.mml[this.index+1]=='h') {
+		        this.index += 2;
+		        wml.SetCh(this.synth,this.GetNum());
+			continue;
+		    }
+		}
+                switch (this.mml[this.index]) {
+                    case 't':
+                        ++this.index;
+                        this.tempo = this.GetNum();
+                        if (this.tempo <= 0)
+                            this.tempo = 120;
+                        break;
+		    case 'v':
+                        ++this.index;
+			v=this.GetNum()*8;
+			if(v>127) v=127;
+			if(v<0) v=0;
+                        wml.Vol(this.synth,v);
+                        break;
+		    case '@':
+		        ++this.index;
+			wml.Prog(this.synth,this.GetNum());
+			break;
+                    case 'l':
+                        ++this.index;
+                        this.deflen = this.GetNum();
+                        break;
+                    case '>':
+                        ++this.index;
+                        ++this.oct;
+                        break;
+                    case '<':
+                        ++this.index;
+                        --this.oct;
+                        break;
+                    case 'o':
+                        ++this.index;
+                        this.oct = this.GetNum();
+                        break;
+                    case 'r':
+                        this.Event(-1);
+                        break;
+                    case 'c':
+                        this.Event(0);
+                        break;
+                    case 'd':
+                        this.Event(2);
+                        break;
+                    case 'e':
+                        this.Event(4);
+                        break;
+                    case 'f':
+                        this.Event(5);
+                        break;
+                    case 'g':
+                        this.Event(7);
+                        break;
+                    case 'a':
+                        this.Event(9);
+                        break;
+                    case 'b':
+                        this.Event(11);
+                        break;
+                    default:
+                        ++this.index;
+                        break;
+                }
+            }
+            if (this.index >= this.mml.length) {
+                this.tempo = 120;
+                this.deflen = 8;
+                this.oct = 3;
+                this.index = 0;
+            }
+        }
+    }
+
+
+
+    wml = new WebMidiLink();
+    seq = new Sequencer();
+    function AddSynth(n, url) {
+        seq.trk[n].SetSynth(wml.AddSynth(url));
+    }
+    function Play() {
+        for (var i = 0; i < 3; ++i) {
+            seq.trk[i].SetMML(document.getElementById("mml" + i).value);
+        }
+        seq.Play();
+    }
+    function Stop() {
+        seq.Stop();
+    }
+    
+  
+function SetUrl(id,str) {
+    document.getElementById(id).value=str;
+}
+var lastn=-1;
+var keypress=0;
+function KeyPress(n,v) {
+	for(var i=0;i<3;++i) {
+		if(document.getElementById("key"+(i+1)).checked && seq.trk[i].synth!=null) {
+			if(v)
+				wml.NoteOn(seq.trk[i].synth,n+24,64);
+			else
+				wml.NoteOff(seq.trk[i].synth,n+24);
+
+		}
+	}
+}
+function KeyNum(x,y) {
+	var n=-1;
+	if(y>=32 && y<72)
+		n=Math.floor((x-32)/7);
+	if(y>=72 && y<112) {
+		n=Math.floor((x-32)/12);
+		n=Math.floor(n/7)*12+[0,2,4,5,7,9,11][n%7];
+	}
+	if(n>=0&&n<72)
+		return n;
+	return -1;
+}
+function KeyRect(n) {
+	var x,y,w,h;
+	switch(n%12) {
+	case 1:
+	case 3:
+	case 6:
+	case 8:
+	case 10:
+		x=32+Math.floor(n/12)*84+(n%12)*7;
+		y=32;
+		w=7;
+		h=40;
+		break;
+	default:
+		x=32+Math.floor(n/12)*84+([0,0,1,1,2,3,3,4,4,5,5,6][n%12])*12;
+		y=72;
+		w=12;
+		h=32;
+		break;
+	}
+	return {x:x,y:y,w:w,h:h};
+}
+function MouseDown(e) {
+	var ctx=canvaskey.getContext("2d");
+        var rc = e.target.getBoundingClientRect();
+        mousex = Math.floor(e.clientX - rc.left);
+        mousey = Math.floor(e.clientY - rc.top);
+        if (mousex < 0) mousex = 0;
+        if (mousey < 0) mousey = 0;
+	var n=KeyNum(mousex,mousey);
+	lastn=n;
+	keypress=1;
+	if(lastn>=0 && lastn<72) {
+		KeyPress(n,1);
+		var r=KeyRect(lastn);
+		ctx.drawImage(imgkb2,r.x,r.y,r.w,r.h,r.x,r.y,r.w,r.h);
+	}
+}
+function MouseUp(e) {
+	var ctx=canvaskey.getContext("2d");
+	if(lastn>=0) {
+		KeyPress(lastn,0);
+		var r=KeyRect(lastn);
+		ctx.drawImage(imgkb,r.x,r.y,r.w,r.h,r.x,r.y,r.w,r.h);
+		lastn=-1;
+	}
+	keypress=0;
+}
+function MouseMove(e) {
+	var ctx=canvaskey.getContext("2d");
+        var rc = e.target.getBoundingClientRect();
+        mousex = Math.floor(e.clientX - rc.left);
+        mousey = Math.floor(e.clientY - rc.top);
+        if (mousex < 0) mousex = 0;
+        if (mousey < 0) mousey = 0;
+	var n=KeyNum(mousex,mousey);
+	if(keypress) {
+		if(n!=lastn) {
+			if(lastn>=0) {
+				KeyPress(lastn,0);
+				var r=KeyRect(lastn);
+				ctx.drawImage(imgkb,r.x,r.y,r.w,r.h,r.x,r.y,r.w,r.h);
+			}
+			if(n>=0) {
+				KeyPress(n,1);
+				var r=KeyRect(n);
+				ctx.drawImage(imgkb2,r.x,r.y,r.w,r.h,r.x,r.y,r.w,r.h);
+			}
+			lastn=n;
+		}
+	}
+}
+window.onload=function() {
+	canvaskey=document.getElementById("canvaskey");
+	canvaskey.onmousedown=MouseDown;
+	canvaskey.onmouseup=MouseUp;
+	canvaskey.onmousemove=MouseMove;
+	imgkb=new Image();
+	imgkb.src="keyboard.png?"+new Date().getTime();
+	imgkb.onload=function() {
+		var ctx=canvaskey.getContext("2d");
+		ctx.drawImage(imgkb,0,0);
+	}
+	imgkb2=new Image();
+	imgkb2.src="keyboard2.png?"+new Date().getTime();
+}
+</script>
+
+<p>'WebMidiLink' is a technology for sync multiple web-based synthesizer.
+Press 'Load' button for Instrument-1 and Instrument-2, and press 'Play'.
+</p>
+<b>Chrome is recommended to run demo.</b>
+<hr />
+Webシンセの連携動作テストページです。 各Instrumentに WebMidiLink対応のWebシンセをロードして同期演奏を行います。
+<hr/>
+<div style="background:#e0e0ff;padding:10px;border:1px solid #8080e0">
+<canvas id="canvaskey" width=800 height=150>
+</canvas>
+<br/>
+<input type="checkbox" id="key1" value="inst1" checked/>Instrument-1
+<input type="checkbox" id="key2" value="inst2"/>Instrument-2
+<input type="checkbox" id="key3" value="inst3"/>Instrument-3
+<br/>
+<br/>
+<button onclick="Play()">MML Play</button>
+<button onclick="Stop()">MML Stop</button>
+<hr />
+<h4>Instrument-1</h4>
+<table style="border:0px">
+<tr>
+<td rowspan=2>URL : </td><td><input id="url0" type="text" value="http://www.g200kg.com/en/docs/webmodular/webmodular.html" size=60/></td>
+<td rowspan=2><button onclick="AddSynth(0,document.getElementById('url0').value)">Load</button></td>
+</tr>
+<tr>
+<td><select onchange="SetUrl('url0',this[this.selectedIndex].value)">
+<option value="http://www.g200kg.com/en/docs/webmodular/webmodular.html">g200kg : WebModular</option>
+<option value="http://aikelab.net/websynth/">aike : WebSynth</option>
+<option value="https://dl.dropbox.com/u/645229/webmodular-and-timbre/midilink.html">mohayonao : timbre.js</option>
+</select></td></tr>
+<tr>
+<td>MML : </td><td><textarea id="mml0" rows=4 cols=40>t120o3g1d1c1d1</textarea></td>
+</tr>
+</table>
+<hr />
+
+<h4>Instrument-2</h4>
+<table style="border:0px">
+<tr>
+<td rowspan=2>URL : </td><td><input id="url1" type="text" value="http://www.g200kg.com/en/docs/webmodular/webmodular.html" size=60/></td>
+<td rowspan=2><button onclick="AddSynth(1,document.getElementById('url1').value)">Load</button></td>
+</tr>
+<tr>
+<td><select onchange="SetUrl('url1',this[this.selectedIndex].value)">
+<option value="http://www.g200kg.com/en/docs/webmodular/webmodular.html">g200kg : WebModular</option>
+<option value="http://aikelab.net/websynth/">aike : WebSynth</option>
+<option value="https://dl.dropbox.com/u/645229/webmodular-and-timbre/midilink.html">mohayonao : timbre.js</option>
+</select></td></tr>
+<tr>
+<td>MML : </td><td><textarea id="mml1" rows=4 cols=40>t120o5l16gagdcdd+dgagdcdd+dgagdcdd+dgagdcdd+d</textarea></td>
+</tr>
+</table>
+<hr />
+
+<h4>Instrument-3</h4>
+<table style="border:0px">
+<tr>
+<td rowspan=2>URL : </td><td><input id="url2" type="text" value="http://www.g200kg.com/en/docs/webmodular/webmodular.html" size=60/></td>
+<td rowspan=2><button onclick="AddSynth(2,document.getElementById('url2').value)">Load</button></td>
+</tr>
+<tr>
+<td><select onchange="SetUrl('url2',this[this.selectedIndex].value)">
+<option value="http://www.g200kg.com/en/docs/webmodular/webmodular.html">g200kg : WebModular</option>
+<option value="http://aikelab.net/websynth/">aike : WebSynth</option>
+<option value="https://dl.dropbox.com/u/645229/webmodular-and-timbre/midilink.html">mohayonao : timbre.js</option>
+</select></td></tr>
+<tr>
+<td>MML : </td><td><textarea id="mml2" rows=4 cols=40></textarea></td>
+</tr>
+</table>
+</div>
+<hr />
+
+<h3>WebMidiLink Specification</h3>
+<a href="http://www.g200kg.com/en/docs/webmidilink/spec.html">WebMidiLink Specification<br/>
+技術的な説明</a>
+<hr/>
+<h3>WebMidiLink Supported WebApps</h3>
+<h4>WebMidiLink supported Synths</h4>
+<table>
+<tr><th>Author</th><th>URL</th><th>Description</th></tr>
+<tr><td><a href="www.g200kg.com/">g200kg</a></td>
+  <td><a href="http://www.g200kg.com/en/docs/webmodular/webmodular.html">http://www.g200kg.com/en/docs/webmodular/webmodular.html</a></td>
+  <td>Modular synthesizer</td>
+</tr>
+<tr><td><a href="http://d.hatena.ne.jp/aike/">aike</a></td>
+<td><a href="http://aikelab.net/websynth/">http://aikelab.net/websynth/</td>
+<td>Mini Moog like synthesizer</td>
+</tr>
+<tr>
+<td><a href="http://mohayonao.github.com/">mohayonao</a></td>
+<td><a href="https://dl.dropbox.com/u/645229/webmodular-and-timbre/midilink.html">https://dl.dropbox.com/u/645229/webmodular-and-timbre/index.html</a>
+<td>timbre.js scripting synthesizer</td>
+</tr>
+</table>
+<h4>WebMidiLink Host App</h4>
+<table>
+<tr><th>Author</th><th>URL</th><th>Description</th></tr>
+<tr>
+<td><a href="http://mohayonao.github.com/">mohayonao</a></td>
+<td><a href="https://dl.dropbox.com/u/645229/webmodular-and-timbre/index.html">https://dl.dropbox.com/u/645229/webmodular-and-timbre/index.html</a>
+<td>timbre.js Rhythm track + WebMidiLink Synth</td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,874 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<title>WebSequencer | g200kg Music &amp; Software</title>
+<meta charset="UTF-8">
+<!--
+<meta name="keywords" content="Computer,Music,MIDI,VST,DAW,DTM"/>
+<meta name="msvalidate.01" content="43A64EFC06DC48878352725A6B464427" />
+<meta name="y_key" content="860a71a10535d067" />
+<meta property="og:title" content="WebSequencer | g200kg Music &amp; Software" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.g200kg.com/websequencer/index.html" />
+<meta property="og:site_name" content="g200kg Music &amp; Software" />
+<meta property="fb:admins" content="100002707605815" />
+<link rel="stylesheet" href="/styles-site.css" type="text/css" media="all" />
+<link rel="icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon" />
+-->
+<style type="text/css">
+.nodrag {
+	-moz-user-select: none;
+}
+#container {
+	width:auto;
+	margin:0px 2% 0px 2%;
+}
+#main {
+	width:auto;
+}
+#canvas {
+	width:950px;
+	height:380px;
+}
+.titlebox {
+	font-size:small;
+	font-weight:bold;
+	color:#ddd;
+	padding:3px 3px 3px 10px;
+	margin:3px;
+	background: -moz-linear-gradient(top, #778, #667 10%, #556 90%,#334);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #778), color-stop(0.1,#667),color-stop(0.9,#556),color-stop(1, #334));
+	border:1px solid #000;
+	box-shadow: 2px 2px 3px 0px #222;
+}
+iframe {
+	width:100%;
+	height:100%;
+}
+#Frame {
+	background:#445;
+	padding:5px;
+	font-size:small;
+	margin:0px auto;
+	border:1px solid #88a;
+}
+Input {
+	font-size:small;
+}
+select {
+	font-size:small;
+	margin:0px;
+	padding:0px;
+	border:1px solid #666666;
+	border-radius:2px;
+    background: -moz-linear-gradient(top, #fff, #eee 10%, #ddd 90%,#aaa);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.1,#eee),color-stop(0.9,#ddd),color-stop(1, #aaa));
+}
+.MenuArea {
+	box-shadow: 2px 2px 3px 0px #222;
+	margin:3px 3px 0px 3px;
+	background:#556;
+	background: -moz-linear-gradient(top, #778, #667 10%, #556 90%,#334);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #778), color-stop(0.1,#667),color-stop(0.9,#556),color-stop(1, #334));
+	border:1px solid #222;
+	border-radius: 8px;
+}
+.Menubar {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+	-khtml-user-drag: none;
+	padding:4px;
+}
+.Menu {
+	color:#ddd;
+	float:left;
+	font-size:10px;
+	margin:2px;
+	padding:0px 5px;
+	height:24px;
+	vertical-align:middle;
+}
+.Menu2 {
+	color:#ddd;
+	float:left;
+	font-size:10px;
+	margin:2px;
+	padding:0px 5px;
+	height:44px;
+	vertical-align:middle;
+}
+.MenuT {
+	color:#ddd;
+	float:left;
+	font-size:10px;
+	margin:2px;
+	padding:0px 5px;
+	height:24px;
+}
+.MenuT input {
+	border:1px solid #333;
+}
+.gh {
+	color:#ddd;
+	display:block;
+	font-size:9px;
+	text-align:right;
+	height:20px;
+	line-height:20px;
+	float:left;
+	vertical-align:middle;
+	margin:2px;
+	padding:0px;
+}
+.Round_l {
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+.Round_r {
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+}
+.Menu button {
+	display:block;
+	float:left;
+	color:#000;
+	font-size:11px;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	text-align:center;
+	margin:0px;
+	padding:0px 8px;
+	height:26px;
+	line-height:24px;
+	vertical-align:middle;
+	border:2px solid #333;
+	background:#eee;
+	background: -moz-linear-gradient(top, #888, #eee 10%, #aaa 90%,#888);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #888), color-stop(0.1,#eee),color-stop(0.9,#aaa),color-stop(1, #888));
+}
+.Menu button:active {
+	background:#f71;
+}
+.Menu select {
+	display:block;
+	float:left;
+	color:#000;
+	font-size:12px;
+	font-weight:normal;
+	text-align:center;
+	margin:0px;
+	padding:1px 0px;
+	height:26px;
+	line-height:22px;
+	vertical-align:middle;
+	border:2px solid #333;
+	background:#eee;
+	background: -moz-linear-gradient(top, #888, #eee 10%, #aaa 90%,#888);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #888), color-stop(0.1,#eee),color-stop(0.9,#aaa),color-stop(1, #888));
+}
+.Menu option {
+	font-family:monospace;
+	background:#fff;
+	font-size:13px;
+	text-align:left;
+}
+.Menu input {
+	display:none;
+}
+.Menu2 input {
+	display:none;
+}
+.Menu label {
+	display:block;
+	float:left;
+	color:#000;
+	font-size:11px;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	text-align:center;
+	margin:0px;
+	padding:0px 8px;
+	height:22px;
+	line-height:22px;
+	vertical-align:middle;
+	border:2px solid #333;
+	background:#eee;
+	background: -moz-linear-gradient(top, #888, #eee 10%, #aaa 90%,#888);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #888), color-stop(0.1,#eee),color-stop(0.9,#aaa),color-stop(1, #888));
+}
+.Menu2 label {
+	display:block;
+	float:left;
+	color:#000;
+	font-size:11px;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	text-align:center;
+	margin:0px;
+	padding:0px 8px;
+	height:40px;
+	line-height:40px;
+	vertical-align:middle;
+	border:2px solid #333;
+	background:#eee;
+	background: -moz-linear-gradient(top, #888, #eee 10%, #aaa 90%,#888);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #888), color-stop(0.1,#eee),color-stop(0.9,#aaa),color-stop(1, #888));
+}
+.Menu label img {
+	vertical-align:middle;
+	padding:0px;
+	margin:0px;
+}
+.Menu2 label img {
+	vertical-align:middle;
+	padding:0px;
+	margin:0px;
+}
+.Menu input:checked+label {
+	background:#fa4;
+	background: -moz-linear-gradient(top, #fa4, #fa4 10%, #e93 90%,#b60);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b60), color-stop(0.1,#fa4),color-stop(0.9,#e93),color-stop(1, #b60));
+}
+.Menu2 input:checked+label {
+	background:#fa4;
+	background: -moz-linear-gradient(top, #fa4, #fa4 10%, #e93 90%,#b60);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b60), color-stop(0.1,#fa4),color-stop(0.9,#e93),color-stop(1, #b60));
+}
+.Menu label:active {
+	background:#f71;
+}
+.Menu2 label:active {
+	background:#f71;
+}
+#TrackBase {
+	position:relative;
+}
+.Track {
+	font-size:11px;
+	margin:0px 3px 3px 3px;
+	padding:2px 10px 10px 10px;
+	background:#556;
+	height:180px;
+	line-height:24px;
+	overflow-y:scroll;
+	background:#334;
+    background: -moz-linear-gradient(top, #334, #223);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #334), color-stop(1, #223));
+	border:1px solid #111;
+	box-shadow:3px 3px 3px #222 inset;
+	border-radius: 8px;
+	overflow-x:hidden;
+ }
+#Ruler {
+	vertical-align:bottom;
+	border:1px solid #112;
+	width:300px;
+	height:10px;
+	margin:0px 0px 0px 450px;
+	padding:0px;
+}
+#EvList {
+	background:#113;
+	color:#fff;
+	width:260px;
+	height:190px;
+	float:right;
+	display:none;
+	padding:2px 0px 0px 10px;
+	line-height:18px;
+}
+#EvScr {
+	margin:0px;
+	padding:0px;
+	float:right;
+	width:20px;
+	height:190px;
+	overflow-x:hidden;
+	overflow-y:scroll;
+}
+#EvScrC {
+	margin:0px;
+	padding:0px;
+	width:1px;
+	height:1000px;
+}
+.Evl {
+	float:left;
+	margin:0px;
+	padding:0px;
+	color:#fff;
+	border:1px solid #444;
+	background:#113;
+	width:45px;
+	height:14px;
+	line-height:14px;
+	font-size:12px;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	text-align:center;
+}
+.Track option {
+	background:#fff;
+}
+.TrkRow {
+	display:block;
+	width:95%;
+	margin:0px;
+	padding:0px 10px;
+	font-size:11px;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	color:#000;
+	height:24px;
+	line-height:23px;
+	border:1px solid #444;
+	border-radius:2px;
+	overflow:hidden;
+	background:#eee;
+	background: -moz-linear-gradient(top, #fff, #eee 10%, #ddd 90%,#aaa);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.1,#eee),color-stop(0.9,#ddd),color-stop(1, #aaa));
+	border-top-left-radius: 12px;
+	border-bottom-left-radius: 12px;
+}
+.TrkRow div {
+	width:800px;
+	position:relative;
+}
+.TrkSel {
+	display:none;
+}
+.TrkLabel div {
+	margin:0px;
+	padding:0px;
+	background:#eee;
+	background: -moz-linear-gradient(top, #fff, #eee 10%, #ddd 90%,#aaa);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.1,#eee),color-stop(0.9,#ddd),color-stop(1, #aaa));
+}
+.TrkSel:active+label div {
+	width:800px;
+	height:24px;
+	background:#ffff71;
+}
+.TrkSel:checked+label div {
+	width:800px;
+	height:24px;
+	margin:0px;
+	padding:0px;
+	background:#fa4;
+	background: -moz-linear-gradient(top, #fa4, #fa4 10%, #e93 90%,#b60);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b60), color-stop(0.1,#fa4),color-stop(0.9,#e93),color-stop(1, #b60));
+}
+.TrkLabel div:active {
+	background:#ff0071;
+}
+.TrkCv {
+	position:absolute;
+	top:0px;
+	left:318px;
+	vertical-align:middle;
+	margin:0px 0px 0px 0px;
+	padding:0px;
+	vertical-align:top;
+}
+.TrkRow input {
+	font-family:Arial,sans-serif;
+	margin:0px;
+	padding:0px;
+	border:1px solid #666;
+	vertical-align:middle;
+	text-align:center;
+	font-size:10px;
+	height:15px;
+	line-height:15px;
+}
+.TrkRow select {
+	font-family:Arial,sans-serif;
+	margin:0px;
+	padding:0px;
+	border:1px solid #666;
+	vertical-align:middle;
+	text-align:center;
+	font-size:10px;
+	height:17px;
+	line-height:17px;
+}
+.TrkCB {
+	display:none;
+}
+.TrkCBL {
+	font-size:11px;
+	font-family:Arial,sans-serif;
+	font-weight:normal;
+	text-align:center;
+	vertical-align:middle;
+	margin:0px;
+	padding:1px 8px;
+	height:12px;
+	line-height:12px;
+	border:1px solid #666666;
+	border-radius:2px;
+	background:#eee;
+    background: -moz-linear-gradient(top, #fff, #eee 10%, #ccc 90%,#aaa);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.1,#eee),color-stop(0.9,#ccc),color-stop(1, #aaa));
+}
+.TrkCB:checked+label {
+	background:#fa4;
+}
+#savedfile {
+	 color:#aaf;
+}
+#savedurl {
+	 color:#aaf;
+}
+</style>
+<script type="text/javascript" src="websequencer.js"></script>
+<script type="text/javascript" src="https://www.g200kg.com/webmidilink/synthlist.js"></script>
+
+</head>
+<body onload="Init()">
+<div id="content"></div>
+<div id="container">
+<div id="header">
+  <div id="logo2"><a href="/"><img src="https://www.g200kg.com/image/logo/g200kg160x80.png" alt=""/></a></div>
+  <div style="clear:both"></div>
+</div>
+<img src="./websequencer.png" style="float:left;margin:0px 20px 0px 20px;" alt=""/>
+
+<!--
+<div style="float:left">
+<script type="text/javascript"><!--
+                            google_ad_client = "pub-5618328583582553";
+                            /* 728x90, 作成済み 11/08/21 */
+                            google_ad_slot = "6176235247";
+                            google_ad_width = 728;
+                            google_ad_height = 90;
+//-->
+<!--</script>
+<script type="text/javascript"
+src="//pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div style="clear:both"></div>
+<hr />-->
+<!-- Twitter -->
+<!--<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+<div style="height:24px;width:500px;">
+<div style="float:left;height:22px;width:100px;">
+<a href="//twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="g200kg">Tweet</a>
+</div>-->
+
+<!--<div style="float:left;height:22px;width:100px;">-->
+<!-- Place this tag where you want the +1 button to render. -->
+<!--<div class="g-plusone" data-size="medium"></div>-->
+
+<!-- Place this tag after the last +1 button tag. -->
+<!--<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>-->
+</div>
+
+<div style="float:left;height:22px;width:100px;">
+<!--<iframe src="http://www.facebook.com/plugins/like.php?href=http://www.g200kg.com/websequencer/index.html&amp;send=false&amp;layout=button_count&amp;width=120&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:300px; height:21px;" allowTransparency="true"></iframe>-->
+<!--<iframe src="//www.facebook.com/plugins/like.php?href=https://www.g200kg.com/websequencer/index.html&amp;send=false&amp;layout=button_count&amp;width=120&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" style="border:none; overflow:hidden; width:300px; height:21px;"></iframe>-->
+</div>
+</div>
+<div id="main">
+<hr />
+<button onclick="ShowDoc('en')">English</button> | <button onclick="ShowDoc('ja')">Japanese</button>
+<ul id="doc_en" style="display:block">
+<li><b>WebSequencer</b> is a MIDI sequencer written in HTML5/Javascript.</li>
+<li>Chrome is recommended.</li>
+<li><b>WebSequencer</b> can load up-to four <a href="/en/docs/webmidilink/" target="_blank">WebMidiLink</a> compatible Web-synths.</li>
+<li>MIDI files can be loaded by 'LoadFile' button or FILE-DROP.</li>
+<li>The created song can be saved from the 'SAVED-FILE' link after clicking the 'SaveFile' button.</li>
+<li>In addition, the song can be direct linked form 'SAVED-URL'.</li>
+<li>The link to 'SAVED-URL' will automaticaly play when check 'AutoPlay'</li>
+<li>Keyboard shortcuts are available for example; A..Select / S..Scroll / E..Edit / 1..Zoom1 / Z..ZoomIn / X..ZoomOut</li>
+<li>Realtime record from MIDI-keyboard is tentatively available</li>
+<li><button onclick="window.open('help.html','WebSeqHelp','width=600,height=500,scrollbars=yes')">Usage</button></li>
+</ul>
+<ul id="doc_ja" style="display:none">
+<li><b>WebSequencer</b>はHTML5/javascriptで書いたMIDIシーケンサーです</li>
+<li>Chromeの使用を推奨します</li>
+<li><a href="/en/docs/webmidilink/" target="_blank">WebMidiLink</a>対応のWebシンセを4台までロードできます</li>
+<li>「LoadFile」ボタンの操作またはファイルドロップでMIDIファイルをロードできます</li>
+<li>「SaveFile」を押した後、隣の「SAVED-FILE」リンクからファイルを保存できます。ファイルはMIDI形式ですのでそのまま他のMIDIプレーヤーで再生する事もできます</li>
+<li> また、作った曲は「SAVED-URL」から直接URLとしてリンクできます</li>
+<li> SAVED-URLのリンクはAutoPlayにチェックした場合、自動再生を行うようになります</li>
+<li> キーボードショートカットが使用可能です: 例) A..Select / S..Scroll / E..Edit / 1..Zoom1 / Z..ZoomIn / X..ZoomOut</li>
+<li> MIDIキーボードからのリアルタイム入力の実験的な実装をしています</li>
+<li><button onclick="window.open('help.html','WebSeqHelp','width=600,height=500,scrollbars=yes')">使い方の詳細</button>
+</ul>
+<div>MIDI-in device : <button onclick="InitMidi()">Initialize MIDI</button><select id="mididev" onchange="SelMidiDev(this.selectedIndex)"><option>---</option></select></div>
+<div>Time Resolusioin (mSec) : <input type="text" id="timereso" value="10" size="3" onchange="SetTimeReso()"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/></div>
+<div id="Frame">
+<div class="titlebox">WebSequencer</div>
+<div class="MenuArea">
+<div class="MenuT">Title:<input id="title" type="text" onfocus="GetFocus(this)" onblur="RelFocus(this)"/> Copyright:<input id="copy" type="text" onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ Text:<input id="tex" type="text" onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ Beat:<input id="sign" size=4 type="text" value="4/4" style="text-align:center" onfocus="GetFocus(this)" onblur="RelFocus(this)" onchange="SetSign(this.value)"/>
+ Key:<input id="key" size=4 type="text" style="text-align:center" onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ Bpm:<input id="bpm" type="text" size="4" value="120" style="text-align:center" onfocus="GetFocus(this)" onblur="RelFocus(this)" onkeypress="SetBpm(event)"/>
+</div>
+<br style="clear:both"/>
+<div class="Menubar">
+<div class="Menu2"><div class="gh"></div>
+<input type="radio" name="trp" id="stop" onclick="song.Stop()" checked><label for="stop" class="Round_l"><img src="./iconstop.png"  ondragstart="return false" alt=""/>Stop</label>
+<input type="radio" name="trp" id="play" onclick="song.Play()"><label for="play"><img src="./iconplay.png" ondragstart="return false" alt=""/>Play</label>
+<input type="radio" name="trp" id="rew" onclick="song.Rew()"><label for="rew"><img src="./iconrew.png" ondragstart="return false" alt=""/>Rew</label>
+<input type="radio" name="trp" id="ff"  onclick="song.FF()"><label for="ff"><img src="./iconff.png"  ondragstart="return false" alt=""/>End</label>
+<input type="radio" name="trp" id="rec" onclick="song.Rec()"><label for="rec" class="Round_r"><img src="./iconrec.png" ondragstart="return false" alt=""/>Rec</label>
+</div>
+<div class="Menu"><div class="gh">File:</div>
+<button class="Round_l" onclick="NewFile()">NewFile</button>
+<input type="file" id="file" style="display:none;" onchange="LoadFile()"/><button onclick="LoadClick()">LoadFile</button>
+<button class="Round_r" onclick="SaveFile()">SaveFile</button> <span id="saved" style="display:none;"><a id="savedfile" href=""></a>  <a id="savedurl" href=""></a> <input id="autoplay" type="checkbox" style="display:inline" onchange="SaveFile()">AutoPlay</span>
+</div>
+<div class="Menu"><div class="gh">Track:</div>
+<button class="Round_l" onclick="song.AddTrk()">AddTrk</button>
+<button class="Round_r" onclick="song.DelTrk(-1)">DelTrk</button>
+</div>
+<div class="Menu">
+<input class="TrkCB" type="checkbox" id="guidesw" onclick="SetGuide()" checked/><label for="guidesw" class="TrkCBL">GuideClk</label>
+</div>
+<div class="Menu">
+<input class="TrkCB" type="checkbox" id="evlistsw" onclick="SetEvList()"/><label for="evlistsw" class="TrkCBL">EvList</label>
+</div>
+<br style="clear:both"/>
+<div class="Menu"><div class="gh">Mode:</div>
+<input type="radio" name="mode" id="msel" onclick="SetMode(0)" checked/><label for="msel" class="Round_l"><img src="./iconsel.png" ondragstart="return false" alt=""/>Select(A)</label>
+<input type="radio" name="mode" id="mscr" onclick="SetMode(1)"/><label for="mscr"><img src="./iconhand.png"  ondragstart="return false" alt=""/>Scroll(S)</label>
+<input type="radio" name="mode" id="medit" onclick="SetMode(2)"/><label for="medit" class="Round_r"><img src="./iconedit.png"  ondragstart="return false" alt=""/>Edit(E)</label>
+</div>
+<div class="Menu"><div class="gh">Edit:</div>
+<button onclick="Delete()" class="Round_l">Delete</button>
+<button onclick="Copy()">Copy</button>
+<button onclick="Paste()" class="Round_r">Paste</button>
+</div>
+<div class="Menu" style="width:100px"><div class="gh">Grid:</div><select onchange="SetGrid(this.options[this.selectedIndex].value)">
+<option id="grid2" value="960">1/2</option><option id="grid4" value="480">1/4</option><option id="grid8" value="240">1/8</option><option id="grid16" value="120" selected>1/16</option>
+<option id="grid32" value="60">1/32</option><option id="grid64" value="30">1/64</option><option id="grid128" value="15">1/128</option><option id="grid2-3" value="640">1/2-3</option>
+<option id="grid4-3" value="320">1/4-3</option><option id="grid8-3" value="160">1/8-3</option><option id="grid16-3" value="80">1/16-3</option><option id="grid32-3" value="40">1/32-3</option>
+</select>
+</div>
+<div class="Menu"><div class="gh">Zoom(Z/X):</div>
+<input type="radio" name="xzoom" id="x128" onclick="SetXZoom(128)" /><label for="x128" class="Round_l">4/1</label>
+<input type="radio" name="xzoom" id="x64" onclick="SetXZoom(64)" /><label for="x64">2/1</label>
+<input type="radio" name="xzoom" id="x32" onclick="SetXZoom(32)" checked /><label for="x32">1/1</label>
+<input type="radio" name="xzoom" id="x16" onclick="SetXZoom(16)" /><label for="x16">1/2</label>
+<input type="radio" name="xzoom" id="x8" onclick="SetXZoom(8)" /><label for="x8">1/4</label>
+<input type="radio" name="xzoom" id="x4" onclick="SetXZoom(4)" /><label for="x4">1/8</label>
+<input type="radio" name="xzoom" id="x2" onclick="SetXZoom(2)" /><label for="x2" class="Round_r">1/16</label>
+</div>
+<br style="clear:both"/>
+</div>
+</div>
+<canvas id="Ruler" width="300" height="10">
+</canvas>
+<div id="TrackBase">
+<div id="EvList">
+<div id="EvScr">
+<div id="EvScrC"></div>
+</div>
+<div class="Evl">Tick</div><div class="Evl">Gate</div><div class="Evl">Cmd</div><div class="Evl">Val1</div><div class="Evl">Val2</div><br/>
+<input id="EvItem" type="text" class="Evl" onkeydown="song.EditD(event,this,0)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,1)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,2)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,3)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,4)"/><br/>
+<input type="text" class="Evl" onkeydown="song.EditD(event,this,5)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,6)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,7)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,8)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,9)"/><br/>
+<input type="text" class="Evl" onkeydown="song.EditD(event,this,10)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,11)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,12)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,13)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,14)"/><br/>
+<input type="text" class="Evl" onkeydown="song.EditD(event,this,15)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,16)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,17)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,18)"/><input type="text" class="Evl" onkeydown="song.EditD(event,this,19)"/><br/>
+<input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><br/>
+<input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><br/>
+<input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><br/>
+<input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><br/>
+<input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><input type="text" class="Evl" /><br/>
+</div>
+<div class="Track">
+<div id="row1" class="TrkRow" draggable="true" onclick="SelTrk(1)" onmousedown="TRowMDown(1)"><div>Trk-01
+ <select id="trk1inst" onchange="SelTrackInst(1)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk1ch" onchange="SelCh(1)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk1pg" type="text" size=4 onchange="SetPg(1)" onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk1mute" onclick="SetMute()"/><label for="trk1mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk1solo" onclick="SetMute()"/><label for="trk1solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can1" width=450 height=24></canvas>
+</div></div>
+
+<div id="row2" class="TrkRow" draggable="true" onclick="SelTrk(2)" onmousedown="TRowMDown(2)"><div>Trk-02
+ <select id="trk2inst" onchange="SelTrackInst(2)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk2ch" onchange="SelCh(2)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk2pg" type="text" size=4 onchange="SetPg(2)" onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk2mute" onclick="SetMute()"/><label for="trk2mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk2solo" onclick="SetMute()"/><label for="trk2solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can2" width=450 height=24></canvas>
+</div></div>
+
+<div id="row3" class="TrkRow" draggable="true" onclick="SelTrk(3)" onmousedown="TRowMDown(3)"><div>Trk-03
+ <select id="trk3inst" onchange="SelTrackInst(3)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk3ch" onchange="SelCh(3)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk3pg" type="text" size=4 onchange="SetPg(3)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk3mute" onclick="SetMute()"/><label for="trk3mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk3solo" onclick="SetMute()"/><label for="trk3solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can3" width=450 height=24></canvas>
+</div></div>
+
+<div id="row4" class="TrkRow" draggable="true" onclick="SelTrk(4)" onmousedown="TRowMDown(4)"><div>Trk-04
+ <select id="trk4inst" onchange="SelTrackInst(4)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk4ch" onchange="SelCh(4)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk4pg" type="text" size=4 onchange="SetPg(4)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk4mute" onclick="SetMute()"/><label for="trk4mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk4solo" onclick="SetMute()"/><label for="trk4solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can4" width=450 height=24></canvas>
+</div></div>
+
+<div id="row5" class="TrkRow" draggable="true" onclick="SelTrk(5)" onmousedown="TRowMDown(5)"><div>Trk-05
+ <select id="trk5inst" onchange="SelTrackInst(5)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk5ch" onchange="SelCh(5)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk5pg" type="text" size=4 onchange="SetPg(5)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk5mute" onclick="SetMute()"/><label for="trk5mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk5solo" onclick="SetMute()"/><label for="trk5solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can5" width=450 height=24></canvas>
+</div></div>
+
+<div id="row6" class="TrkRow" draggable="true" onclick="SelTrk(6)" onmousedown="TRowMDown(6)"><div>Trk-06
+ <select id="trk6inst" onchange="SelTrackInst(6)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk6ch" onchange="SelCh(6)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk6pg" type="text" size=4 onchange="SetPg(6)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk6mute" onclick="SetMute()"/><label for="trk6mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk6solo" onclick="SetMute()"/><label for="trk6solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can6" width=450 height=24></canvas>
+</div></div>
+
+<div id="row7" class="TrkRow" draggable="true" onclick="SelTrk(7)" onmousedown="TRowMDown(7)"><div>Trk-07
+ <select id="trk7inst" onchange="SelTrackInst(7)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk7ch" onchange="SelCh(7)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk7pg" type="text" size=4 onchange="SetPg(7)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk7mute" onclick="SetMute()"/><label for="trk7mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk7solo" onclick="SetMute()"/><label for="trk7solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can7" width=450 height=24></canvas>
+</div></div>
+
+<div id="row8" class="TrkRow" draggable="true" onclick="SelTrk(8)" onmousedown="TRowMDown(8)"><div>Trk-08
+ <select id="trk8inst" onchange="SelTrackInst(8)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk8ch" onchange="SelCh(8)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk8pg" type="text" size=4 onchange="SetPg(8)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk8mute" onclick="SetMute()"/><label for="trk8mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk8solo" onclick="SetMute()"/><label for="trk8solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can8" width=450 height=24></canvas>
+</div></div>
+
+<div id="row9" class="TrkRow" draggable="true" onclick="SelTrk(9)" onmousedown="TRowMDown(9)"><div>Trk-09
+ <select id="trk9inst" onchange="SelTrackInst(9)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk9ch" onchange="SelCh(9)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk9pg" type="text" size=4 onchange="SetPg(9)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk9mute" onclick="SetMute()"/><label for="trk9mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk9solo" onclick="SetMute()"/><label for="trk9solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can9" width=450 height=24></canvas>
+</div></div>
+
+<div id="row10" class="TrkRow" draggable="true" onclick="SelTrk(10)" onmousedown="TRowMDown(10)"><div>Trk-10
+ <select id="trk10inst" onchange="SelTrackInst(10)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk10ch" onchange="SelCh(10)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk10pg" type="text" size=4 onchange="SetPg(10)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk10mute" onclick="SetMute()"/><label for="trk10mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk10solo" onclick="SetMute()"/><label for="trk10solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can10" width=450 height=24></canvas>
+</div></div>
+
+<div id="row11" class="TrkRow" draggable="true" onclick="SelTrk(11)" onmousedown="TRowMDown(11)"><div>Trk-11
+ <select id="trk11inst" onchange="SelTrackInst(11)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk11ch" onchange="SelCh(11)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk11pg" type="text" size=4 onchange="SetPg(11)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk11mute" onclick="SetMute()"/><label for="trk11mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk11solo" onclick="SetMute()"/><label for="trk11solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can11" width=450 height=24></canvas>
+</div></div>
+
+<div id="row12" class="TrkRow" draggable="true" onclick="SelTrk(12)" onmousedown="TRowMDown(12)"><div>Trk-12
+ <select id="trk12inst" onchange="SelTrackInst(12)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk12ch" onchange="SelCh(12)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk12pg" type="text" size=4 onchange="SetPg(12)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk12mute" onclick="SetMute()"/><label for="trk12mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk12solo" onclick="SetMute()"/><label for="trk12solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can12" width=450 height=24></canvas>
+</div></div>
+
+<div id="row13" class="TrkRow" draggable="true" onclick="SelTrk(13)" onmousedown="TRowMDown(13)"><div>Trk-13
+ <select id="trk13inst" onchange="SelTrackInst(13)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk13ch" onchange="SelCh(13)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk13pg" type="text" size=4 onchange="SetPg(13)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk13mute" onclick="SetMute()"/><label for="trk13mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk13solo" onclick="SetMute()"/><label for="trk13solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can13" width=450 height=24></canvas>
+</div></div>
+
+<div id="row14" class="TrkRow" draggable="true" onclick="SelTrk(14)" onmousedown="TRowMDown(14)"><div>Trk-14
+ <select id="trk14inst" onchange="SelTrackInst(14)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk14ch" onchange="SelCh(14)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk14pg" type="text" size=4 onchange="SetPg(14)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk14mute" onclick="SetMute()"/><label for="trk14mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk14solo" onclick="SetMute()"/><label for="trk14solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can14" width=450 height=24></canvas>
+</div></div>
+
+<div id="row15" class="TrkRow" draggable="true" onclick="SelTrk(15)" onmousedown="TRowMDown(15)"><div>Trk-15
+ <select id="trk15inst" onchange="SelTrackInst(15)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk15ch" onchange="SelCh(15)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk15pg" type="text" size=4 onchange="SetPg(15)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk15mute" onclick="SetMute()"/><label for="trk15mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk15solo" onclick="SetMute()"/><label for="trk15solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can15" width=450 height=24></canvas>
+</div></div>
+
+<div id="row16" class="TrkRow" draggable="true" onclick="SelTrk(16)" onmousedown="TRowMDown(16)"><div>Trk-16
+ <select id="trk16inst" onchange="SelTrackInst(16)"><option>Synth-1</option><option>Synth-2</option><option>Synth-3</option><option>Synth-4</option>
+ </select>
+ <select id="trk16ch" onchange="SelCh(16)"><option>Ch-1</option><option>Ch-2</option><option>Ch-3</option><option>Ch-4</option><option>Ch-5</option><option>Ch-6</option><option>Ch-7</option><option>Ch-8</option>
+ <option>Ch-9</option><option>Ch-10</option><option>Ch-11</option><option>Ch-12</option><option>Ch-13</option><option>Ch-14</option><option>Ch-15</option><option>Ch-16</option>
+ </select>
+ Prog:<input id="trk16pg" type="text" size=4 onchange="SetPg(16)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<input class="TrkCB" type="checkbox" id="trk16mute" onclick="SetMute()"/><label for="trk16mute" class="TrkCBL">Mute</label>
+<input class="TrkCB" type="checkbox" id="trk16solo" onclick="SetMute()"/><label for="trk16solo" class="TrkCBL">Solo</label>
+<canvas class="TrkCv" id="can16" width=450 height=24></canvas>
+</div></div>
+
+</div>
+</div>
+<div id="prollbg" style="height:400px">
+<canvas id="canvas" width=950 height=400 tabindex="1">
+</canvas>
+
+<div class="Menu" id="opsw">
+<input type="radio" name="op" id="opvelo" onclick="SetOpt(0x90)" checked/><label for="opvelo" class="Round_l">Velo</label>
+<input type="radio" name="op" id="optempo" onclick="SetOpt(0xff51)" /><label for="optempo">Tempo</label>
+<input type="radio" name="op" id="oppitch" onclick="SetOpt(0xe0)" /><label for="oppitch">Pitch</label>
+<input type="radio" name="op" id="opprg" onclick="SetOpt(0xc0)" /><label for="opprg">Prog</label>
+<input type="radio" name="op" id="opcc" onclick="SetOpt(document.getElementById('opccnum').selectedIndex)"/><label for="opcc">CC#</label>
+<select id="opccnum" onchange="if(document.getElementById('opcc').checked) SetOpt(this.selectedIndex)">
+<option>. 0 BankSel</option><option>* 1 ModWheel</option><option>. 2 BreathCtl</option><option>. 3</option><option>. 4 FootCtl</option><option>. 5 PortaTime</option><option>. 6 DtEntry</option><option>* 7 ChVol</option>
+<option>. 8 Balance</option><option>. 9 </option><option>*10 Pan</option><option>*11 Expression</option><option>.12 EffCtl1</option><option>.13 EffCtl2</option><option>.14</option><option>.15</option>
+<option>.16 GeneralCtl1</option><option>.17 GeneralCtl2</option><option>.18 GeneralCtl3</option><option>.19 GeneralCtl4</option><option>.20</option><option>.21</option><option>.22</option><option>.23</option>
+<option>.24</option><option>.25</option><option>.26</option><option>.27</option><option>.28</option><option>.29</option><option>.30</option><option>.31</option>
+<option>.32 BankSel(LSB)</option><option>.33 ModWheel(LSB)</option><option>.34 BreathCtl(LSB)</option><option>.35</option><option>.36 FootCtl(LSB)</option><option>.37 PortaTime(LSB)</option><option>.38 DtEntry(LSB)</option><option>.39 ChVol(LSB)</option>
+<option>.40 Balance(LSB)</option><option>.41</option><option>.42 Pan(LSB)</option><option>.43 Expression(LSB)</option><option>.44 EffCtl1(LSB)</option><option>.45 EffCtl2(LSB)</option><option>.46</option><option>.47</option>
+<option>.48 GeneralCtl1(LSB)</option><option>.49 GeneralCtl2(LSB)</option><option>.50 GeneralCtl3(LSB)</option><option>.51 GeneralCtl4(LSB)</option><option>.52</option><option>.53</option><option>.54</option><option>.55</option>
+<option>.56</option><option>.57</option><option>.58</option><option>.59</option><option>.60</option><option>.61</option><option>.62</option><option>.63</option>
+<option>*64 Sustain</option><option>.65 PortaOnOff</option><option>.66 Sostenuto</option><option>.67 Soft</option><option>.68 Legato</option><option>.69 Hold2</option><option>.70 SndCtl1</option><option>.71 SndCtl2</option>
+<option>.72 SndCtl3</option><option>.73 SndCtl4</option><option>.74 SndCtl5</option><option>.75 SndCtl6</option><option>.76 SndCtl7</option><option>.77 SndCtl8</option><option>.78 SndCtl9</option><option>.79 SndCtl10</option>
+<option>.80 GeneralCtl5</option><option>.81 GeneralCtl6</option><option>.82 GeneralCtl7</option><option>.83 GeneralCtl8</option><option>.84 PortaCtl</option><option>.85</option><option>.86</option><option>.87</option>
+<option>.88</option><option>.89</option><option>.90</option><option>.91 Eff1Depth</option><option>.92 Eff2Depth</option><option>.93 Eff3Depth</option><option>.94 Eff4Depth</option><option>.95 Eff5Depth</option>
+<option>.96 DataInc</option><option>.97 DataDec</option><option>.98 NRPN(LSB)</option><option>.99 NRPN(MSB)</option><option>100 RPN(LSB)</option><option>101 RPN(MSB)</option><option>102</option><option>103</option>
+<option>104</option><option>105</option><option>106</option><option>107</option><option>108</option><option>109</option><option>110</option><option>111</option>
+<option>112</option><option>113</option><option>114</option><option>115</option><option>116</option><option>117</option><option>118</option><option>119</option>
+</select>
+</div>
+</div>
+<br style="clear:both"/>
+</div>
+<hr style="clear:both"/>
+<div style="background:#ccf;padding:4px;">
+<div class="Menu">
+<input type="radio" name="inst" id="instbtn1" onclick="SelInst(0)" checked/><label for="instbtn1" class="Round_l">Synth-1</label>
+<input type="radio" name="inst" id="instbtn2" onclick="SelInst(1)" /><label for="instbtn2">Synth-2</label>
+<input type="radio" name="inst" id="instbtn3" onclick="SelInst(2)" /><label for="instbtn3">Synth-3</label>
+<input type="radio" name="inst" id="instbtn4" onclick="SelInst(3)" /><label for="instbtn4" class="Round_r">Synth-4</label>
+</div>
+<br style="clear:both"/>
+</div>
+<div id="inst1" style="background:#bbd;padding:0px 3px;height:720px;overflow:hidden;display:block">
+<div style="float:left">URL:</div><div style="float:left"><input id="url1" type="text" value="https://www.g200kg.com/en/docs/webbridge/" size=60 onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<button onclick="AddSynth(0,document.getElementById('url1').value,'sy1')">Load</button>
+<button onclick="AddSynth(0,'about:blank','sy1')">Unload</button>
+ Latency(msec):<input id="latency1" type="text" value="0" size=10 onchange="SetLatency(0)" onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ LinkLv:<span id="linklv1"></span>
+<br />
+<select id="synthsel1" onchange="document.getElementById('url1').value=this.options[this.selectedIndex].value"></select>
+</div>
+<iframe id="sy1"></iframe>
+</div>
+<div id="inst2" style="background:#bbd;padding:0px 3px;height:720px;overflow:hidden;display:block">
+<div style="float:left">URL:</div><div style="float:left"><input id="url2" type="text" value="" size=60  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<button onclick="AddSynth(1,document.getElementById('url2').value,'sy2')">Load</button>
+<button onclick="AddSynth(1,'about:blank','sy2')">Unload</button>
+ Latency(msec):<input id="latency2" type="text" value="0" size=10 onchange="SetLatency(1)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ LinkLv:<span id="linklv2"></span>
+<br />
+<select id="synthsel2" onchange="document.getElementById('url2').value=this.options[this.selectedIndex].value"></select>
+</div>
+<iframe id="sy2"></iframe>
+</div>
+<div id="inst3" style="background:#bbd;padding:0px 3px;height:720px;overflow:hidden;display:block">
+<div style="float:left">URL:</div><div style="float:left"><input id="url3" type="text" value="" size=60  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<button onclick="AddSynth(2,document.getElementById('url3').value,'sy3')">Load</button>
+<button onclick="AddSynth(2,'about:blank','sy3')">Unload</button>
+ Latency(msec):<input id="latency3" type="text" value="0" size=10 onchange="SetLatency(2)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ LinkLv:<span id="linklv3"></span>
+<br />
+<select id="synthsel3" onchange="document.getElementById('url3').value=this.options[this.selectedIndex].value"></select>
+</div>
+<iframe id="sy3"></iframe>
+</div>
+<div id="inst4" style="background:#bbd;padding:0px 3px;height:720px;overflow:hidden;display:block">
+<div style="float:left">URL:</div><div style="float:left"><input id="url4" type="text" value="" size=60  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+<button onclick="AddSynth(3,document.getElementById('url4').value,'sy4')">Load</button>
+<button onclick="AddSynth(3,'about:blank','sy4')">Unload</button>
+ Latency(msec):<input id="latency4" type="text" value="0" size=10 onchange="SetLatency(3)"  onfocus="GetFocus(this)" onblur="RelFocus(this)"/>
+ LinkLv:<span id="linklv4"></span>
+<br />
+<select id="synthsel4" onchange="document.getElementById('url4').value=this.options[this.selectedIndex].value"></select>
+</div>
+<iframe id="sy4"></iframe>
+</div>
+</div>
+</div>
+<!--<div id="MIDIPlugin" style="position:absolute; visibility:hidden"></div>-->
+</body>
+</html>

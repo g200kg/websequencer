@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GMPlayer</title>
+<!--<script type="text/javascript" src="/docs/waapisim/waapisim.js"></script>-->
+<script type="text/javascript">
+    var app;
+    var audioif;
+    var canvas;
+    var imgkeys,imgval,imgprogs,imgval2,imgch,imgform,imgpenv,imgenv;
+    var samplerate;
+    var rsamplerate;
+    var outbuf;
+    var outbufsize;
+    var numoscmax = 32;
+    var numosc = 16;
+
+    var wavnamesindex = 0;
+    var wavnames = [
+        "null", "piano2", "epiano", "marimba2", "bell2", "organ", "guitar", "eguitar2", "mguitar","aguitar", "bass","abass","string", "trstr","pizz", "ohit", "brass","ens",
+        "harmo","square","saw","flute", "5th","sndtrk","koto2","mtom", "phone","applause","gun","kick2", "chh","ohh",
+        "snare", "clap", "ride", "rbell", "tamb","timb","tom", "crash", "maracas", "whistle","conga", "vibra", "agogo",
+        "wood","guiros","guirol","cuica","trim","trio","noise","bird","heli"
+    ];
+    var program = [
+        { name: "piano1", file: "piano2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1,gr:0 },
+        { name: "piano2", file: "piano2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "egpiano", file: "piano2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "hkpiano", file: "piano2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "epiano1", file: "epiano", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "epiano2", file: "epiano", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "harpsic", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "clavi  ", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "celesta", file: "epiano", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "glocken", file: "epiano", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "musicbx", file: "epiano", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "vibraph", file: "epiano", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "marimba", file: "marimba2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "xylopho", file: "marimba2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "tubbell", file: "bell2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.5, gr: 0 },
+        { name: "dulcimr", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "drwborg", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "percorg", file: "organ", wav: null, mode: "L", len: 0, st: 0, lp: 596, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "rockorg", file: "organ", wav: null, mode: "L", len: 0, st: 0, lp: 596, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "chchorg", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0.8, r: 0.8, pr: 1, gr: 0 },
+        { name: "reedorg", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "accordn", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.8, r: 0, pr: 1, gr: 0 },
+        { name: "hrmonca", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.7, r: 0, pr: 1, gr: 0 },
+        { name: "tangacc", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.8, r: 0, pr: 1, gr: 0 },
+        { name: "agtr ny", file: "aguitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "agtr st", file: "aguitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "egtr jz", file: "guitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "egtr cl", file: "guitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "egtr mu", file: "mguitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "odv gtr", file: "eguitar2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.5, gr: 0 },
+        { name: "dst gtr", file: "eguitar2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.5, gr: 0 },
+        { name: "gtrharm", file: "harmo", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "ac bass", file: "abass", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "e bassf", file: "bass", wav: null, mode: "N", len: 0, st: 820, lp: 0, a: 0.4, r: 0, pr: 2, gr: 0 },
+        { name: "e bassp", file: "bass", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "fl bass", file: "piano2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "slap b1", file: "guitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "slap b2", file: "guitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "sybass1", file: "guitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "sybass2", file: "guitar", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "violin ", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "viola  ", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "cello  ", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "contrab", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "trem st", file: "trstr", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "pizzict", file: "pizz", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ochharp", file: "piano2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "timpani", file: "mtom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+
+        { name: "strens1", file: "ens", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "strens2", file: "ens", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "sy str1", file: "ens", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "sy str2", file: "ens", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "cho aah", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "voc ooh", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "sy voic", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.95, pr: 1, gr: 0 },
+        { name: "orchhit", file: "ohit", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0.9, pr: 1, gr: 0 },
+        { name: "trumpet", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "trombon", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "tuba   ", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "mut trm", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "frch hr", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "brs sec", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "sybras1", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "sybras2", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "sop sax", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "alt sax", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ten sax", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "bar sax", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "oboe   ", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "eng hor", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "bassoon", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "clarine", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "piccolo", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "flute  ", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "recorde", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "panflut", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "blownbt", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "shakuha", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "whistle", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "ocarina", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+
+        { name: "ld1 sqr", file: "square", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ld2 saw", file: "saw", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ld3 cal", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "ld4 chi", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ld5 cha", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ld6 voi", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0.8, r: 0.8, pr: 1, gr: 0 },
+        { name: "ld7 fif", file: "5th", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0.7, pr: 1, gr: 0 },
+        { name: "ld8 b+l", file: "brass", wav: null, mode: "L", len: 0, st: 7308, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "pd1 new", file: "flute", wav: null, mode: "L", len: 0, st: 0, lp: 8725, a: 0.3, r: 0.3, pr: 0.5, gr: 0 },
+        { name: "pd2 war", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0.95, r: 0, pr: 1, gr: 0 },
+        { name: "pd3 pol", file: "brass", wav: null, mode: "L", len: 0, st: 0, lp: 7308, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "pd4 cho", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0.95, r: 0.95, pr: 1, gr: 0 },
+        { name: "pd5 bow", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0.95, r: 0.95, pr: 1, gr: 0 },
+        { name: "pd6 met", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.95, r: 0.95, pr: 1, gr: 0 },
+        { name: "pd7 hal", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.95, r: 0.95, pr: 1, gr: 0 },
+        { name: "pd8 swe", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "fx1 rai", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "fx2 sou", file: "sndtrk", wav: null, mode: "L", len: 0, st: 0, lp: 12463, a: 0.95, r: 0.95, pr: 1, gr: 0 },
+        { name: "fx3 cry", file: "bell2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.5, gr: 0 },
+        { name: "fx4 atm", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0.95, pr: 1, gr: 0 },
+        { name: "fx5 bri", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "fx6 gob", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0.995, r: 0, pr: 1, gr: 0 },
+        { name: "fx7 ech", file: "organ", wav: null, mode: "L", len: 0, st: 596, lp: 596, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "fx8 sci", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "sitar  ", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "banjo  ", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "shamise", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "koto   ", file: "koto2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "kalimba", file: "marimba2", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "bagpipe", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "fiddle ", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.6, r: 0.1, pr: 1, gr: 0 },
+        { name: "shanai ", file: "string", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "tinkbel", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "agogo  ", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "st drum", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "woodblk", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "taikodr", file: "mtom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.5, gr: 0 },
+        { name: "melotom", file: "mtom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "syndrum", file: "mtom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "revsymb", file: "crash", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0.995, r: 0, pr: 1.8, gr: 0 },
+        { name: "frtnois", file: "maracas", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 4, gr: 0 },
+        { name: "brtnois", file: "maracas", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0.7, r: 0, pr: 4, gr: 0 },
+        { name: "seashor", file: "noise", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0.995, r: 0, pr: 1, gr: 0 },
+        { name: "birdtwt", file: "bird", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "telring", file: "phone", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0.9, pr: 1, gr: 0 },
+        { name: "helicop", file: "heli", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.5, gr: 0 },
+        { name: "applaus", file: "applause", wav: null, mode: "L", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "gunshot", file: "gun", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "AcBDrum", file: "kick2", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.8, gr: 0 },
+        { name: "BDrum 1", file: "kick2", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "SideStk", file: "snare", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 3, gr: 0 },
+        { name: "AcSnare", file: "snare", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "HandClp", file: "clap", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ElSnare", file: "snare", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.2, gr: 0 },
+        { name: "LoFlTom", file: "tom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.6, gr: 0 },
+        { name: "ClsHHat", file: "chh", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr:1},
+        { name: "HiFlTom", file: "tom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.8, gr: 0 },
+        { name: "PdlHHat", file: "chh", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1,gr:1 },
+        { name: "LowTom ", file: "tom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "OpnHHat", file: "ohh", wav: null, mode: "N", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1,gr:1 },
+        { name: "LoMdTom", file: "tom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.2, gr: 0 },
+
+        { name: "HiMdTom", file: "tom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.4, gr: 0 },
+        { name: "CrsSym1", file: "crash", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "HighTom", file: "tom", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.6, gr: 0 },
+        { name: "RidSym1", file: "ride", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ChnsSym", file: "crash", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.8, gr: 0 },
+        { name: "RideBel", file: "rbell", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Tambour", file: "tamb", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "SplaSym", file: "crash", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2, gr: 0 },
+        { name: "CowBell", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.6, gr: 0 },
+        { name: "CrsSym2", file: "crash", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.2, gr: 0 },
+        { name: "VibrSlp", file: "vibra", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.9, gr: 0 },
+        { name: "RidSym2", file: "ride", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "HiBongo", file: "conga", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 3.5, gr: 0 },
+        { name: "LoBongo", file: "conga", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2.5, gr: 0 },
+        { name: "MHiCong", file: "conga", wav: null, mode: "O", len: 0, st: 6000, lp: 0, a: 0, r: 0, pr: 1.0, gr: 0 },
+        { name: "OHiCong", file: "conga", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.0, gr: 0 },
+
+        { name: "LowCong", file: "conga", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.8, gr: 0 },
+        { name: "HiTimbl", file: "timb", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.2, gr: 0 },
+        { name: "LoTimbl", file: "timb", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "HiAgogo", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.2, gr: 0 },
+        { name: "LoAgogo", file: "agogo", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Cabasa ", file: "maracas", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 4, gr: 0 },
+        { name: "Maracas", file: "maracas", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "SWhistl", file: "whistle", wav: null, mode: "O", len: 0, st: 36000, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "LWhistl", file: "whistle", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "ShGuiro", file: "guiros", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "LgGuiro", file: "guirol", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Craves ", file: "wood", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 2.5, gr: 0 },
+        { name: "HiWodBlk", file: "wood", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.2, gr: 0 },
+        { name: "LoWodBlk", file: "wood", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 0.8, gr: 0 },
+        { name: "MutCuica", file: "cuica", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1.5, gr: 0 },
+        { name: "OpnCuica", file: "cuica", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "MutTrian", file: "trim", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "OpnTrian", file: "trio", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+        { name: "Null", file: "null", wav: null, mode: "O", len: 0, st: 0, lp: 0, a: 0, r: 0, pr: 1, gr: 0 },
+
+    ];
+
+
+    if (window.addEventListener) {
+        window.addEventListener("message", webMidiLinkRecv, false);
+    }
+    function webMidiLinkRecv(event) {
+        if(!event.data.split)
+            return;
+        var msg = event.data.split(",");
+        switch (msg[0]) {
+            case "link":
+                switch (msg[1]) {
+                    case "reqpatch":
+                        LinkSend(event.source, "link,patch," + GetPatchString());
+                        break;
+                    case "setpatch":
+                        SetPatchString(msg[2]);
+                        break;
+                }
+                break;
+            case "midi":
+                msgque.Push(msg);
+                break;
+        }
+    }
+    function MsgQue() {
+        this.que = Array();
+        this.Push = function(m) {
+            this.que.push([new Date().getTime(), m]);
+        }
+        this.SetTime = function(t) {
+            for (; ; ) {
+                if (this.que.length == 0)
+                    return;
+                var d = this.que[0];
+                if (d[0] > t)
+                    return;
+                this.que.shift();
+                var msg = d[1];
+                var m = parseInt(msg[1], 16);
+                switch (m & 0xf0) {
+                    case 0x80:
+                        app.NoteOff(m & 0xf, parseInt(msg[2], 16));
+                        break;
+                    case 0x90:
+                        var velo = parseInt(msg[3], 16);
+                        if (velo > 0)
+                            app.NoteOn(m & 0xf, parseInt(msg[2], 16), velo);
+                        else
+                            app.NoteOff(m & 0xf, parseInt(msg[2], 16));
+                        break;
+                    case 0xb0:
+                        switch (parseInt(msg[2], 16)) {
+                            case 7:
+                                app.Vol(m & 0xf, parseInt(msg[3], 16));
+                                break;
+                            case 10:
+                                app.Pan(m & 0xf, parseInt(msg[3], 16));
+                                break;
+                            case 0x78:
+                                app.AllSoundOff(m & 0xf);
+                                break;
+                            case 0x79:
+                                app.ResetAllControl(m & 0xf);
+                                break;
+                        }
+                        break;
+                    case 0xc0:
+                        app.SetPrg(m & 0xf, parseInt(msg[2], 16));
+                        break;
+                    case 0xe0:
+                        app.Bend(m & 0xf, parseInt(msg[2], 16) + (parseInt(msg[3], 16) << 7) - 8192);
+                        break;
+                }
+            }
+        }
+    }
+    function LinkSend(win, s) {
+        win.postMessage(s, "*");
+    }
+    function LinkReady() {
+        LinkSend(window.parent, "link,ready");
+    }
+    function AudioIf() {
+        this.kcnt = 0;
+        this.k2cnt = 0;
+        this.start = 0;
+        this.written = 0;
+        this.enable = 0;
+        this.totalwritten = 0;
+        this.count = 0;
+        this.timer = null;
+        var dd = new Date();
+        this.timelast = dd.getTime();
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (typeof (AudioContext) != "undefined") {       // Web Audio API
+            this.enable = 2;
+            this.audio = new AudioContext();
+            samplerate = this.audio.sampleRate;
+            outbufsize = 1024;
+        }
+        else if (typeof (Audio) == "function") {
+            this.audio = new Audio();
+            if (typeof (this.audio.mozSetup) == "function") {   // Audio Data API
+                this.enable = 1;
+                samplerate = 44100;
+                outbufsize = 1024;
+            }
+        }
+        if (this.enable == 0) {
+            samplerate = 44100;
+            outbufsize = 4096;
+        }
+        rsamplerate = 1 / samplerate;
+        try {
+            outbuf = new Float32Array(outbufsize * 2);
+        } catch (e) {
+            outbuf = new Array(outbufsize * 2);
+        }
+        for (var i = 0; i < outbufsize * 2; ++i)
+            outbuf[i] = 0;
+        if (this.enable == 1)
+            this.audio.mozSetup(2, samplerate);
+        if (this.enable == 2) {
+            this.jsnode = this.audio.createScriptProcessor(outbufsize, 2, 2);
+            this.jsnode.onaudioprocess = function(e) {
+                var outl = e.outputBuffer.getChannelData(0);
+                var outr = e.outputBuffer.getChannelData(1);
+                audioif.MakeWave();
+                outl.set(outbuf.subarray(0,outbufsize));
+                outr.set(outbuf.subarray(outbufsize));
+            }
+        }
+        this.Write = function() {
+            if (audioif.enable == 1) {
+                if (audioif.start == 0)
+                    return;
+                var offset = audioif.audio.mozCurrentSampleOffset();
+                if (offset>0 && audioif.totalwritten > offset + 16384)
+                    return;
+                audioif.MakeWave();
+                var w = audioif.audio.mozWriteAudio(outbuf);
+                audioif.totalwritten += w;
+                audioif.written += w;
+            }
+        }
+        this.Start = function() {
+            audioif.audio.resume();
+            this.start = 1;
+            switch (this.enable) {
+                case 1:
+                    if (this.timer == null)
+                        this.timer = setInterval(this.Write, 10);
+                    break;
+                case 2:
+                    this.jsnode.connect(this.audio.destination);
+                    break;
+            }
+        }
+        this.Stop = function() {
+            this.start = 0;
+            switch (this.enable) {
+                case 1:
+                    if (this.timer != null)
+                        clearInterval(this.timer);
+                    break;
+                case 2:
+                    this.jsnode.disconnect(0);
+                    break;
+            }
+        }
+        this.MakeWave = function() {
+            var timenow = new Date().getTime();
+            for (var i = 0; i < outbufsize; ++i) {
+                if ((this.kcnt += rsamplerate) >= 0.005) {
+                    msgque.SetTime(this.timelast+(timenow-this.timelast)*i/outbufsize);
+                    this.kcnt -= 0.005;
+                    for (var j = 0; j < numosc; ++j)
+                        app.oscs[j].IntProcess();
+                    if (this.k2cnt++ >= 20) {
+                        this.k2cnt = 0;
+                        for (var j = 0; j < numosc; ++j) {
+                            if (app.oscs[j].ena)
+                                app.ctx.fillStyle = "#0f0";
+                            else
+                                app.ctx.fillStyle = "#000";
+                            app.ctx.fillRect(j * 4, 0, 3, 3);
+                        }
+                        app.ctx.fillStyle = "#888";
+                        for (; j < numoscmax; ++j) {
+                            app.ctx.fillRect(j * 4, 0, 3, 3);
+                        }
+                        app.ctx.fillStyle = "#000";
+                        if (app.overflow > 0) {
+                            --app.overflow;
+                            app.ctx.fillStyle = "#f00";
+                        }
+                        app.ctx.fillRect(numoscmax * 4, 0, 12, 3);
+                    }
+                }
+                if (this.enable == 1) {
+                    var i2 = i * 2;
+                    outbuf[i2] = outbuf[i2 + 1] = 0;
+                    for (var j = 0; j < numosc; ++j)
+                        app.oscs[j].Process(i * 2, i * 2 + 1);
+                }
+                else {
+                    outbuf[i] = outbuf[i + outbufsize] = 0;
+                    for (var j = 0; j < numosc; ++j)
+                        app.oscs[j].Process(i, i + outbufsize);
+                }
+            }
+            this.timelast = timenow;
+        }
+    }
+    function Osc() {
+        this.ch = 0;
+        this.note = -1;
+        this.delta = 0;
+        this.phase = 0x7fffffff;
+        this.curlv = this.lv = this.trig = 0;
+        this.velo = 0;
+        this.voll = this.volr = 0.5;
+        this.prg = null;
+        this.ena = 0;
+        this.gr = 0;
+        this.Set = function(ch, n, v) {
+            this.ch = ch;
+            this.note = n;
+            if (n >= 0) {
+                this.ena = 1;
+                this.velo = v / 128;
+                this.delta = 0;
+                if (ch == 9) {
+                    this.prg = program[128 + n];
+                    this.gr = this.prg.gr;
+                    this.delta = 44100 / samplerate * this.prg.pr;
+                }
+                else {
+                    this.prg = program[app.chprg[ch]];
+                    this.gr = this.prg.gr;
+                    this.delta = (44100 * Math.pow(2, (n - 69) / 12)) / samplerate * this.prg.pr;
+                }
+                this.phase = this.prg.st;
+                this.trig = 1;
+            }
+            else {
+                if (this.prg.mode != "O")
+                    this.trig = 0;
+            }
+        }
+        this.IntProcess = function() {
+            if (this.trig) {
+                if (this.lv > 0.99)
+                    this.lv = 1;
+                else
+                    this.lv += (1 - this.lv) * (1 - this.prg.a);
+            }
+            else {
+                if (this.lv < 0.01)
+                    this.lv = 0;
+                else
+                    this.lv -= this.lv * (1 - this.prg.r);
+            }
+            this.voll = app.chvol[this.ch] * Math.min(1, (1 - app.chpan[this.ch]) * 2) * app.mastervol;
+            this.volr = app.chvol[this.ch] * Math.min(1, app.chpan[this.ch] * 2) * app.mastervol;
+        }
+        this.Process = function(il, ir) {
+            if (this.curlv > this.lv) {
+                if ((this.curlv -= 0.01) < 0.01)
+                    this.curlv = 0;
+            }
+            else if (this.curlv < this.lv) {
+                this.curlv += 0.01;
+            }
+            if (this.curlv == 0)
+                this.ena = 0;
+            else
+                this.ena = 1;
+            if (this.ena > 0) {
+                var w = this.prg.wav;
+                if (w) {
+                    this.phase += this.delta;
+                    if (this.phase >= this.prg.len) {
+                        switch (this.prg.mode) {
+                            case "L":
+                                this.phase -= (this.prg.len - this.prg.lp);
+                                break;
+                            case "O":
+                            case "N":
+                                this.phase -= this.delta;
+                                this.lv = 0;
+                                break;
+                        }
+                    }
+                    var v = w[Math.floor(this.phase)] * this.curlv;
+                    outbuf[il] += v * this.velo * this.voll;
+                    outbuf[ir] += v * this.velo * this.volr;
+                }
+            }
+        }
+    }
+    function GetFilesTimer() {
+        function SetWav(name, wav, len) {
+            for (var i = 0; i < program.length; ++i) {
+                if (program[i].file == name) {
+                    program[i].wav = wav;
+                    if (program[i].len == 0)
+                        program[i].len = len;
+                }
+            }
+        }
+		if(wavnamesindex<wavnames.length) {
+            if (httpreq) {
+                httpreq.open("GET", "./" + wavnames[wavnamesindex] + ".wav", true);
+				httpreq.responseType="arraybuffer";
+                httpreq.onload = function(e) {
+					var res=httpreq.response;
+					if(!res)
+						res=VBArray(httpreq.responseBody).toArray();
+					var res8=new Uint8Array(res);
+					if(res8[0x22]==0x10)
+						b=2;
+					else
+						b=1;
+					len=(res8.length-0x2c)>>(b-1);
+					var wav=new Float32Array(len);
+					for(var i=0x2c,j=0;j<len;i+=b,++j) {
+						if(b==2) {
+							v=((res8[i+1]&0xff)<<8)+(res8[i]&0xff);
+							if(v&0x8000)
+								v=v-65536;
+							v=v/65536;
+						}
+						else {
+							v=((res8[i]&0xff)-128)/256;
+						}
+						wav[j]=v;
+					}
+					SetWav(wavnames[wavnamesindex], wav, len);
+					++wavnamesindex;
+					setTimeout(GetFilesTimer,10);
+				};
+				httpreq.send();
+			}
+			document.getElementById("loadmess").innerHTML="Loading("+wavnamesindex+"/"+wavnames.length+")";
+		}
+        else {
+            document.getElementById("loadmess").innerHTML = "Load Complete";
+            LinkReady();
+        }
+    }
+    function GetFiles() {
+        httpreq = new XMLHttpRequest();
+        GetFilesTimer();
+    }
+    function App() {
+        this.ctx = canvas.getContext("2d");
+        this.imgkeys = document.getElementById("keys");
+        this.imgval = document.getElementById("val");
+        this.imgprogs = document.getElementById("progs");
+        this.imgch = document.getElementById("ch");
+        this.ctx.drawImage(this.imgkeys, 0, 0);
+        this.oscs = new Array(numoscmax);
+        this.chvol = new Array(16);
+        this.chpan = new Array(16);
+        this.chbend = new Array(16);
+        this.chprg = new Array(16);
+        this.mousex = this.mousey = this.mousepress = 0;
+        this.curch = 0;
+        this.orgy = 0;
+        this.orgv = 0;
+        this.lastnote = 0;
+        this.overflow = 0;
+        this.mastervol = 1.6;
+        for (var i = 0; i < numoscmax; ++i) {
+            this.oscs[i] = new Osc();
+        }
+        this.NoteOn = function(ch, n, v) {
+            var osc;
+            if (n >= 0 && n < 128) {
+                var gr = 0;
+                if (ch == 9)
+                    gr = program[128 + n].gr;
+                this.ctx.fillStyle = "#ff0000";
+                this.ctx.fillRect(n * 3 + 120, 70 + ch * 8, 3, 4);
+                if (gr > 0) {
+                    for (osc = 0; osc < numosc; ++osc) {
+                        if (this.oscs[osc].gr == gr) {
+                            this.oscs[osc].Set(ch, n, v);
+                            return;
+                        }
+                    }
+                }
+                for (osc = 0; osc < numosc; ++osc) {
+                    if (this.oscs[osc].ch == ch && this.oscs[osc].note == n) {
+                        this.oscs[osc].Set(ch, n, v);
+                        return;
+                    }
+                }
+                if (osc == numosc) {
+                    for (osc = 0; osc < numosc; ++osc) {
+                        if (this.oscs[osc].ena == 0) {
+                            this.oscs[osc].Set(ch, n, v);
+                            return;
+                        }
+                    }
+                    this.overflow = 10;
+                }
+            }
+        }
+        this.NoteOff = function(ch, n) {
+            if (n >= 0 && n < 128) {
+                this.ctx.drawImage(this.imgkeys, n * 3 + 120, 70 + ch * 8, 3, 4, n * 3 + 120, 70 + ch * 8, 3, 4);
+                for (var i = 0; i < numosc; ++i) {
+                    if (this.oscs[i].ch == ch && this.oscs[i].note == n)
+                        this.oscs[i].Set(ch, -1, 0);
+                }
+            }
+        }
+        this.Vol = function(ch, v) {
+            this.ctx.drawImage(this.imgval, 0, v * 8, 16, 8, 504, ch * 8 + 68, 16, 8);
+            this.chvol[ch] = v / 127;
+        }
+        this.Pan = function(ch, v) {
+            this.ctx.drawImage(this.imgval, 0, v * 8, 16, 8, 520, ch * 8 + 68, 16, 8);
+            this.chpan[ch] = v / 127;
+        }
+        this.Bend = function(ch, v) {
+            this.chbend[ch] = v / 8192;
+        }
+        this.GetVol = function(ch) {
+            return this.chvol[ch] * 127;
+        }
+        this.GetPan = function(ch) {
+            return this.chpan[ch] * 127;
+        }
+        this.SetPrg = function(ch, p) {
+            this.chprg[ch] = p;
+            if (ch == 9)
+                this.ctx.drawImage(this.imgprogs, 0, 128* 8, 104, 8, 16, ch * 8 + 68, 104, 8);
+            else
+                this.ctx.drawImage(this.imgprogs, 0, p * 8, 104, 8, 16, ch * 8 + 68, 104, 8);
+        }
+        this.SetCh = function(ch) {
+            this.ctx.drawImage(this.imgkeys, 0, this.curch * 8 + 68, 16, 8, 0, this.curch * 8 + 68, 16, 8);
+            this.ctx.drawImage(this.imgch, 0, ch * 8, 16, 8, 0, 68 + ch * 8, 16, 8);
+            this.curch = ch;
+        }
+        this.ShowParam = function() {
+        }
+        this.AllSoundOff = function(ch) {
+            this.ctx.drawImage(this.imgkeys, 120, 68 + ch * 8, 384, 8, 120, 68 + ch * 8, 384, 8);
+            for (var i = 0; i < numosc; ++i) {
+                if (this.oscs[i].note >= 0 && this.oscs[i].ch == ch)
+                    this.oscs[i].Set(ch, -1, 0);
+            }
+        }
+        this.ResetAllControl = function(ch) {
+            for (var i = 0; i < 16; ++i) {
+                this.Vol(i, 100);
+                this.Pan(i, 64);
+                this.Bend(i, 0);
+            }
+        }
+        this.getXY=function(e) {
+            var rc = e.target.getBoundingClientRect();
+            this.mousex = Math.floor(e.clientX - rc.left);
+            this.mousey = Math.floor(e.clientY - rc.top);
+            if (this.mousex < 0) this.mousex = 0;
+            if (this.mousey < 0) this.mousey = 0;
+        }
+        this.MouseDown = function(e) {
+            audioif.audio.resume();
+            this.getXY(e);
+            var ch = ((this.mousey - 68) / 8) | 0;
+            this.orgy = this.mousey;
+            if (this.mousey >= 32 && this.mousey < 64 && this.mousex >= 120 && this.mousex < 504) {
+                var n;
+                if (this.mousey <= 52)
+                    n = ((this.mousex - 120) / 3) | 0;
+                else {
+                    n = ((this.mousex - 120) / 5.142857142857143) | 0;
+                    n = ((n / 7) | 0) * 12 + [0, 2, 4, 5, 7, 9, 11][n % 7];
+                }
+                this.lastnote = n;
+                this.NoteOn(this.curch, n, 64);
+                this.mousepress = 4;
+                this.ctx.drawImage(this.imgprogs, 0, 128 * 8, 104, 8, 16, 9 * 8 + 68, 104, 8);
+            }
+            if (this.mousey >= 68 && ch >= 0 && ch < 16) {
+                this.SetCh(ch);
+                if (this.mousex >= 120 && this.mousex < 504) {
+                    this.lastnote = ((this.mousex - 120) / 3) | 0;
+                    this.NoteOn(this.curch, this.lastnote, 64);
+                    this.mousepress = 3;
+                }
+                if (this.mousex >= 16 && this.mousex < 120) {
+                    this.orgv = this.chprg[this.curch];
+                    this.mousepress = 2;
+                }
+                if (this.mousex >= 504 && this.mousex < 520) {
+                    this.orgv = this.GetVol(this.curch);
+                    this.mousepress = 10;
+                }
+                if (this.mousex >= 520 && this.mousex < 536) {
+                    this.orgv = this.GetPan(this.curch);
+                    this.mousepress = 11;
+                }
+            }
+        }
+        this.MouseMove = function(e) {
+            this.getXY(e);
+            switch (this.mousepress) {
+                case 10:
+                    var val = (this.orgv - (this.mousey - this.orgy) * 0.5) | 0;
+                    if (val < 0) val = 0;
+                    if (val > 127) val = 127;
+                    this.Vol(this.curch, val);
+                    break;
+                case 11:
+                    var val = (this.orgv - (this.mousey - this.orgy) * 0.5) | 0;
+                    if (val < 0) val = 0;
+                    if (val > 127) val = 127;
+                    this.Pan(this.curch, val);
+                    break;
+                case 2:
+                    var val = (this.orgv - (this.mousey - this.orgy) * 0.5) | 0;
+                    if (val < 0) val = 0;
+                    if (val > 127) val = 127;
+                    this.SetPrg(this.curch, val);
+                    break;
+                case 3:
+                    var n = ((this.mousex - 120) / 3) | 0;
+                    var ch = ((this.mousey - 64) / 8) | 0;
+                    if (ch < 0) ch = 0;
+                    if (ch >= 16) ch = 15;
+                    if (n != this.lastnote || ch != this.curch) {
+                        this.NoteOff(this.curch, this.lastnote);
+                        this.SetCh(ch);
+                        this.NoteOn(this.curch, n, 64);
+                        this.lastnote = n;
+                    }
+                    break;
+                case 4:
+                    var n;
+                    if (this.mousey <= 52 || this.mousey >= 64)
+                        n = ((this.mousex - 120) / 3) | 0;
+                    else {
+                        n = ((this.mousex - 120) / 5.142857142857143) | 0;
+                        n = ((n / 7) | 0) * 12 + [0, 2, 4, 5, 7, 9, 11][n % 7];
+                    }
+                    if (n != this.lastnote) {
+                        this.NoteOff(this.curch, this.lastnote);
+                        this.NoteOn(this.curch, n, 64);
+                        this.lastnote = n;
+                    }
+                    break;
+            }
+        }
+        this.MouseUp = function(e) {
+            if (this.mousepress == 3 || this.mousepress == 4)
+                this.NoteOff(this.curch, this.lastnote);
+            this.mousepress = 0;
+        }
+        for (var i = 0; i < 16; ++i) {
+            this.Vol(i, 100);
+            this.Pan(i, 64);
+            this.Bend(i, 0);
+            this.SetPrg(i, i);
+        }
+        this.ctx.drawImage(this.imgprogs, 0, 128 * 8, 104, 8, 16, 9 * 8 + 68, 104, 8);
+//            this.ctx.drawImage(this.imgprogs, 0, p * 8, 104, 8, 16, ch * 8 + 68, 104, 8);
+    }
+    function MouseDown(e) {
+        app.MouseDown(e);
+    }
+    function MouseMove(e) {
+        app.MouseMove(e);
+    }
+    function MouseUp(e) {
+        app.MouseUp(e);
+    }
+    function SetPoly(n) {
+        if (n < 1) n = 1;
+        if (n > 32) n = 32;
+        numosc = n;
+        for (var i = numosc; i < numoscmax; ++i) {
+            app.oscs[i].trig = app.oscs[i].ena = 0;
+        }
+    }
+    function SetMVol(n) {
+        app.mastervol = parseInt(n) / 50;
+    }
+    function GetPatchString() {
+        var pg = "";
+        for (var i = 0; i < 16; ++i) {
+            pg += ("0" + app.chprg[i].toString(16)).substr(-2);
+        }
+        return "mv=" + Math.floor(app.mastervol * 50) + "&pl=" + numosc + "&pg=" + pg;
+
+    }
+    function SetPatchString(s) {
+        var p = s.split("&");
+        for (var i = 0; i < p.length; ++i) {
+            var pp = p[i].split("=");
+            switch (pp[0]) {
+                case "mv":
+                    document.getElementById("mvol").value = pp[1];
+                    SetMVol(parseInt(pp[1]));
+                    break;
+                case "pl":
+                    document.getElementById("poly").value = pp[1];
+                    SetPoly(parseInt(pp[1]));
+                    break;
+                case "pg":
+                    for (var j = 0; j < 16; ++j) {
+                        app.SetPrg(j, parseInt(pp[1].substr(j * 2, 2), 16));
+                    }
+                    break;
+            }
+        }
+    }
+    function Init() {
+        canvas = document.getElementById("canvas");
+        msgque = new MsgQue();
+        audioif = new AudioIf();
+        app = new App();
+        canvas.onmousedown = MouseDown;
+        document.onmousemove = MouseMove;
+        document.onmouseup = MouseUp;
+        GetFiles();
+        audioif.Start();
+    }
+    function SynthStart() {
+        audioif.audio.resume();
+        document.getElementById("splash").style.display="none";
+    }
+</script>
+</head>
+<body onload="Init()">
+<h3>GMPlayer</h3>
+<p>GM Mapped Multi-timbre Synth for WebMidiLink</p>
+<div id="loadmess"></div>
+<div>Poly: <input id="poly" type="text" value="16" size="3" onchange="SetPoly(this.value)"/></div>
+<div>Volume:<input id="mvol" type="text" value="80" size="3" onchange="SetMVol(this.value)" /></div>
+<br />
+<canvas id="canvas" width="600" height="400">
+</canvas>
+<img id="keys" src="keys.png" width=1 height=1 />
+<img id="val" src="val.png" width=1 height=1 />
+<img id="progs" src="progs.png" width=1 height=1 />
+<img id="ch" src="ch.png" width=1 height=1 />
+<div id="splash" style="position:absolute;left:0;top:0;background:rgba(0,0,0,0.5);width:100%;height:100%;display:flex;justify-content:center;align-items:center;">
+    <button style="width:300px;height:200px;font-size:40px" onclick="SynthStart()";>Start Synth</button>
+</div>
+</body>
+</html>
