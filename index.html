@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <title>WebSequencer | g200kg Music &amp; Software</title>
@@ -423,6 +423,14 @@ select {
 #savedurl {
 	 color:#aaf;
 }
+#header {
+	background: #ccf;
+	color:#228;
+	display:flex;
+}
+#header img {
+	margin:10px 30px 10px 10px;
+}
 </style>
 <script type="text/javascript" src="websequencer.js"></script>
 <script type="text/javascript" src="https://www.g200kg.com/webmidilink/synthlist.js"></script>
@@ -432,51 +440,8 @@ select {
 <div id="content"></div>
 <div id="container">
 <div id="header">
-  <div id="logo2"><a href="/"><img src="https://www.g200kg.com/image/logo/g200kg160x80.png" alt=""/></a></div>
-  <div style="clear:both"></div>
-</div>
-<img src="./websequencer.png" style="float:left;margin:0px 20px 0px 20px;" alt=""/>
-
-<!--
-<div style="float:left">
-<script type="text/javascript"><!--
-                            google_ad_client = "pub-5618328583582553";
-                            /* 728x90, 作成済み 11/08/21 */
-                            google_ad_slot = "6176235247";
-                            google_ad_width = 728;
-                            google_ad_height = 90;
-//-->
-<!--</script>
-<script type="text/javascript"
-src="//pagead2.googlesyndication.com/pagead/show_ads.js">
-</script></div>
-<div style="clear:both"></div>
-<hr />-->
-<!-- Twitter -->
-<!--<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-<div style="height:24px;width:500px;">
-<div style="float:left;height:22px;width:100px;">
-<a href="//twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="g200kg">Tweet</a>
-</div>-->
-
-<!--<div style="float:left;height:22px;width:100px;">-->
-<!-- Place this tag where you want the +1 button to render. -->
-<!--<div class="g-plusone" data-size="medium"></div>-->
-
-<!-- Place this tag after the last +1 button tag. -->
-<!--<script type="text/javascript">
-  (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  })();
-</script>-->
-</div>
-
-<div style="float:left;height:22px;width:100px;">
-<!--<iframe src="http://www.facebook.com/plugins/like.php?href=http://www.g200kg.com/websequencer/index.html&amp;send=false&amp;layout=button_count&amp;width=120&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:300px; height:21px;" allowTransparency="true"></iframe>-->
-<!--<iframe src="//www.facebook.com/plugins/like.php?href=https://www.g200kg.com/websequencer/index.html&amp;send=false&amp;layout=button_count&amp;width=120&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" style="border:none; overflow:hidden; width:300px; height:21px;"></iframe>-->
-</div>
+  <a href="https://www.g200kg.com/"><img src="https://www.g200kg.com/image/logo/g200kg160x80.png" alt=""/></a>
+  <h2>WebSequencer</h2>
 </div>
 <div id="main">
 <hr />
@@ -491,6 +456,7 @@ src="//pagead2.googlesyndication.com/pagead/show_ads.js">
 <li>The link to 'SAVED-URL' will automaticaly play when check 'AutoPlay'</li>
 <li>Keyboard shortcuts are available for example; A..Select / S..Scroll / E..Edit / 1..Zoom1 / Z..ZoomIn / X..ZoomOut</li>
 <li>Realtime record from MIDI-keyboard is tentatively available</li>
+<li> This program is published under 'MIT License'. <a href="https://github.com/g200kg/websequencer">https://github.com/g200kg/websequencer</a></li>
 <li><button onclick="window.open('help.html','WebSeqHelp','width=600,height=500,scrollbars=yes')">Usage</button></li>
 </ul>
 <ul id="doc_ja" style="display:none">
@@ -503,6 +469,7 @@ src="//pagead2.googlesyndication.com/pagead/show_ads.js">
 <li> SAVED-URLのリンクはAutoPlayにチェックした場合、自動再生を行うようになります</li>
 <li> キーボードショートカットが使用可能です: 例) A..Select / S..Scroll / E..Edit / 1..Zoom1 / Z..ZoomIn / X..ZoomOut</li>
 <li> MIDIキーボードからのリアルタイム入力の実験的な実装をしています</li>
+<li> このプログラムは MIT License の元公開されています。 <a href="https://github.com/g200kg/websequencer">https://github.com/g200kg/websequencer</a></li>
 <li><button onclick="window.open('help.html','WebSeqHelp','width=600,height=500,scrollbars=yes')">使い方の詳細</button>
 </ul>
 <div>MIDI-in device : <button onclick="InitMidi()">Initialize MIDI</button><select id="mididev" onchange="SelMidiDev(this.selectedIndex)"><option>---</option></select></div>

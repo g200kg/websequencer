@@ -1,5 +1,6 @@
 <html>
 <head>
+<meta charset="UTF-8">
 <style type="text/css">
 body {
 	line-height:150%;
@@ -48,168 +49,168 @@ function Init() {
 <br clear="both"/>
 <button onclick="ShowDoc('en')">English</button> | <button onclick="ShowDoc('ja')">Japanese</button>
 <div id="doc_ja">
-<p><b>WebSequencer</b>��HTML5/Javascript�ŏ����ꂽMIDI�V�[�P���T�[�ł��BChrome�ł̎g�p�𐄏����܂��B
+<p><b>WebSequencer</b>はHTML5/Javascriptで書かれたMIDIシーケンサーです。Chromeでの使用を推奨します。
 </p>
-<p>���̂悤�Ȏ����ł��܂�</p>
+<p>次のような事ができます</p>
 <ul>
-<li><b><a href="http://www.g200kg.com/en/docs/webmidilink/" target="_blank">WebMidiLink</a></b>�Ή��V���Z�̃��[�h</li>
-<li>MIDI�V�[�P���X�̑ł�����/�ҏW/�Đ�</li>
-<li>MIDI�t�@�C���ւ̏����o��/�ǂݍ���</li>
-<li>MIDI�L�[�{�[�h����̃��A���^�C�����͉͂\�ł����A�܂������I�Ȏ����ł�</li>
+<li><b><a href="http://www.g200kg.com/en/docs/webmidilink/" target="_blank">WebMidiLink</a></b>対応シンセのロード</li>
+<li>MIDIシーケンスの打ち込み/編集/再生</li>
+<li>MIDIファイルへの書き出し/読み込み</li>
+<li>MIDIキーボードからのリアルタイム入力は可能ですが、まだ実験的な実装です</li>
 </ul>
-<h2>�t�@�C���̑���</h2>
-<h4>�t�@�C���̕ۑ�</h4>
+<h2>ファイルの操作</h2>
+<h4>ファイルの保存</h4>
 <ul>
-<li><b>WebSequencer</b>�ō�����Ȃ��t�@�C���Ƃ��ď����o���ɂ�[File:]��[SaveFile]�{�^����������
-�{�^���̉E����[SAVED-FILE]�Ƃ��������N������܂��̂ŁA��������u���E�U�̑���Ń����N���ۑ����Ă��������B
+<li><b>WebSequencer</b>で作った曲をファイルとして書き出すには[File:]の[SaveFile]ボタンを押すと
+ボタンの右側に[SAVED-FILE]というリンクが現れますので、そこからブラウザの操作でリンク先を保存してください。
 </li>
-<li>�t�@�C���̌`����MIDI�t�@�C����Web�V���Z�̕t����񂪒ǉ����ꂽ�`���ɂȂ��Ă��܂��̂ŁA
-����MIDI�v���[���[�Ȃǂł����t���\�ł��B
+<li>ファイルの形式はMIDIファイルにWebシンセの付加情報が追加された形式になっていますので、
+他のMIDIプレーヤーなどでも演奏が可能です。
 </li>
-<li>�܂��ׂ�[SAVED-URL]�Ƃ��������N�����URL�`���̃f�[�^�����o���܂��B�����N��̃A�h���X���R�s�[����
-�u���E�U�ŃA�N�Z�X����ƋȂ����[�h���ꂽ��Ԃ�<b>WebSequencer</b>���J���܂��B�������AURL�͔��ɒ����Ȃ�
-���߁A�u���E�U��o�R����V�X�e���ɂ���Ă͐���Ɉ����Ȃ��ꍇ������܂��B
+<li>また隣の[SAVED-URL]というリンクからはURL形式のデータが取り出せます。リンク先のアドレスをコピーして
+ブラウザでアクセスすると曲がロードされた状態で<b>WebSequencer</b>が開きます。ただし、URLは非常に長くなる
+ため、ブラウザや経由するシステムによっては正常に扱えない場合があります。
 </li>
-<li><b>WebSequencer</b>�ł͉��t�����f�[�^���̂��̂Ƃ��Ĉ������͂ł��܂���B���t���ʂ�.wav�Ȃǂɂ������ꍇ��
-�I�[�f�B�II/F�̃��[�v�o�b�N�@�\�Ȃǂ��g���ĕʂ̘^���A�v���Ř^��������@������܂��B
-</li>
-</ul>
-<h4>�t�@�C�����J��</h4>
-<ul>
-<li><b>WebSequencer</b>�ň����t�@�C����MIDI�t�@�C���ł��B
-[File:]���j���[�O���[�v��[LoadFile]����̃t�@�C���I���܂��̓t�@�C���𒼐�<b>WebSequencer</b>�Ƀh���b�v���鎖�ŊJ�������ł��܂��B
-</li>
-<li><b>WebSequencer</b>�ō��ꂽ�t�@�C���Ȃ��Web�V���Z�̐ݒ�Ȃǂ��Č�����܂�(��:WebMidiLink Lv0�Ή��V���Z�̏ꍇ
-�̓V���Z�����[�h����܂������F�͍Č�����܂���BWebMidiLink Lv1�Ή��V���Z�̏ꍇ�͉��F�܂ōČ�����܂�)�B
+<li><b>WebSequencer</b>では演奏を音データそのものとして扱う事はできません。演奏結果を.wavなどにしたい場合は
+オーディオI/Fのループバック機能などを使って別の録音アプリで録音する方法があります。
 </li>
 </ul>
-<h2>�V���Z�̑I��</h2>
-<p><b>WebSequencer</b>��WebMidiLink�Ή��V���Z��[Synth-1]�`[Synth-4]��4��܂Ń��[�h�ł��܂��B
-�f�t�H���g�ł�[Synth-1]��[GMPlayer]�����[�h���ꂽ��ԂɂȂ��Ă��܂��B
-���[�h����菇�͎��̂Ƃ���ł��B
+<h4>ファイルを開く</h4>
 <ul>
-<li>�s�A�m���[���̉��ɂ���[Synth-1]�`[Synth-4]�̃{�^����I�����܂��B</li>
-<li>���̉��̃h���b�v�_�E�����j���[����V���Z��I�т܂��B�܂���URL���킩���Ă���ꍇ��URL����͂��܂��B</li>
-<li>[Load]�{�^���������܂��B</li>
+<li><b>WebSequencer</b>で扱うファイルはMIDIファイルです。
+[File:]メニューグループの[LoadFile]からのファイル選択またはファイルを直接<b>WebSequencer</b>にドロップする事で開く事ができます。
+</li>
+<li><b>WebSequencer</b>で作られたファイルならばWebシンセの設定なども再現されます(注:WebMidiLink Lv0対応シンセの場合
+はシンセがロードされますが音色は再現されません。WebMidiLink Lv1対応シンセの場合は音色まで再現されます)。
+</li>
+</ul>
+<h2>シンセの選択</h2>
+<p><b>WebSequencer</b>はWebMidiLink対応シンセを[Synth-1]～[Synth-4]の4台までロードできます。
+デフォルトでは[Synth-1]に[GMPlayer]がロードされた状態になっています。
+ロードする手順は次のとおりです。
+<ul>
+<li>ピアノロールの下にある[Synth-1]～[Synth-4]のボタンを選択します。</li>
+<li>その下のドロップダウンメニューからシンセを選びます。またはURLがわかっている場合はURLを入力します。</li>
+<li>[Load]ボタンを押します。</li>
 </ul>
 </p>
-<h2>�g���b�N</h2>
-<p><b>WebSequencer</b>��[Trk-01]�`[Trk-16]�̍ő�16�g���b�N�܂ň����܂�
-(�f�t�H���g�̃f���\���O���������N����Ԃł�7�g���b�N���g�p���Ă��܂�)�B
+<h2>トラック</h2>
+<p><b>WebSequencer</b>は[Trk-01]～[Trk-16]の最大16トラックまで扱えます
+(デフォルトのデモソングが入った起動状態では7トラックを使用しています)。
 </p>
-�e�g���b�N�̕\���ɂ͎��̂��̂�����܂��B
+各トラックの表示には次のものがあります。
 <ul>
-<li>�Ή�����V���Z�̐ݒ� : �O����[�V���Z�̑I��]�Ń��[�h����[Synth-1]�`[Synth-4]�̂ǂꂩ��I�����܂��B</li>
-<li>MIDI�`�����l�� : ���̃g���b�N���g�p����MIDI�`�����l���ł��B</li>
-<li>�f�t�H���g�̃v���O�����ԍ� : �V�[�P���X�̐擪�ɂ����Ŏw�肳�ꂽ�v���O�����`�F���W�������I�ɑ}������܂��B
-�V�[�P���X�̓r���Ƀv���O�����`�F���W����ꂽ�ꍇ�͂���ɏ]���܂��B</li>
-<li>�~���[�g����у\���{�^�� : ���̃g���b�N�̍Đ����~���[�g�܂��̓\�����[�h�ɂ��܂��B</li>
-<li>���x�����[�^ : �m�[�g�f�[�^�̃x���V�e�B�ɔ������郁�[�^�[�ł��B</li>
-<li>�V�[�P���X�̊T�� : �Ȃ̐擪����Ō�܂ł̑S�̂̒��Ńm�[�g�f�[�^�̕��z��\�����܂��B</li>
+<li>対応するシンセの設定 : 前項の[シンセの選択]でロードした[Synth-1]～[Synth-4]のどれかを選択します。</li>
+<li>MIDIチャンネル : そのトラックが使用するMIDIチャンネルです。</li>
+<li>デフォルトのプログラム番号 : シーケンスの先頭にここで指定されたプログラムチェンジが自動的に挿入されます。
+シーケンスの途中にプログラムチェンジを入れた場合はそれに従います。</li>
+<li>ミュートおよびソロボタン : そのトラックの再生をミュートまたはソロモードにします。</li>
+<li>レベルメータ : ノートデータのベロシティに反応するメーターです。</li>
+<li>シーケンスの概略 : 曲の先頭から最後までの全体の中でノートデータの分布を表示します。</li>
 </ul>
-<p>�܂��A�g���b�N�̃V�[�P���X�̊T���̏㕔�ɂ͋ȑS�̒��̃s�A�m���[���\���͈̔͂ƌ��݂̍Đ��ʒu���\������܂��B
+<p>また、トラックのシーケンスの概略の上部には曲全体中のピアノロール表示の範囲と現在の再生位置が表示されます。
 </p>
-�g���b�N�̑���F
+トラックの操作：
 <ul>
-<li>�g���b�N�̊e�s���N���b�N����Ƃ��̃g���b�N���I������A�s�A�m���[���ɂ��̃g���b�N�̃f�[�^���\������܂��B</li>
-<li>�g���b�N��ǉ�����ɂ�[Track:]��[AddTrk]�{�^���������܂��B</li>
-<li>�g���b�N���폜����ɂ̓g���b�N��I��������A[DelTrk]�{�^���������܂��B</li>
-<li>�g���b�N�̍s���h���b�O���ď��������ւ��鎖���ł��܂��B</li>
-<li>�g���b�N�㕔�̋Ȃ̑S�̕\�����h���b�O����ƋȑS�̂̒��ł̃s�A�m���[���̕\���ʒu��ύX���܂��B</li>
+<li>トラックの各行をクリックするとそのトラックが選択され、ピアノロールにそのトラックのデータが表示されます。</li>
+<li>トラックを追加するには[Track:]の[AddTrk]ボタンを押します。</li>
+<li>トラックを削除するにはトラックを選択した後、[DelTrk]ボタンを押します。</li>
+<li>トラックの行をドラッグして順序を入れ替える事ができます。</li>
+<li>トラック上部の曲の全体表示をドラッグすると曲全体の中でのピアノロールの表示位置を変更します。</li>
 </ul>
-<h2>�s�A�m���[��</h2>
+<h2>ピアノロール</h2>
 <ul>
-<li>�s�A�m���[���ɂ͌��ݑI������Ă���g���b�N��MIDI�V�[�P���X���\������܂��B</li>
-<li>�㕔�ɂ���2�̐Ԃ��O�p�͌J��Ԃ��̃}�[�J�[�ōĐ����ɂ���2�̃}�[�J�[�ŋ��܂ꂽ���������[�v�Đ����܂��B</li>
-<li>�܂������s�ɂ���΂̏c�����Đ��J�[�\���Ō��݂̍Đ��ʒu��\���A�Đ��͂��̍Đ��ʒu����J�n����܂��B</li>
-<li>�����̃��[���ɂ̓x���V�e�B/�s�b�`�x���h/�R���g���[���`�F���W�Ȃǂ̏�񂪕\������܂��B</li>
+<li>ピアノロールには現在選択されているトラックのMIDIシーケンスが表示されます。</li>
+<li>上部にある2つの赤い三角は繰り返しのマーカーで再生時にこの2つのマーカーで挟まれた部分をループ再生します。</li>
+<li>また同じ行にある緑の縦線が再生カーソルで現在の再生位置を表し、再生はこの再生位置から開始されます。</li>
+<li>下部のレーンにはベロシティ/ピッチベンド/コントロールチェンジなどの情報が表示されます。</li>
 </ul>
-<h4>�ҏW���[�h�̐؂�ւ�</h4>
-<p>[Select][Scroll][Edit]��3�̃��[�h������܂��B
-���j���[��[Mode:]�̏��̃{�^�����L�[�{�[�h�V���[�g�J�b�gA / S / E �Ő؂�ւ����܂��B
-�e���[�h�̎�Ȗ����͎��̂悤�ɂȂ��Ă��܂��B
+<h4>編集モードの切り替え</h4>
+<p>[Select][Scroll][Edit]の3つのモードがあります。
+メニューの[Mode:]の所のボタンかキーボードショートカットA / S / E で切り替えられます。
+各モードの主な役割は次のようになっています。
 </p>
 <ul>
-<li>[Select] : �m�[�g/MIDI�C�x���g��I�����܂��B</li>
-<li>[Scroll] : �s�A�m���[�����X�N���[�����܂��B</li>
-<li>[Edit] : �m�[�g��ҏW���܂��B</li>
+<li>[Select] : ノート/MIDIイベントを選択します。</li>
+<li>[Scroll] : ピアノロールをスクロールします。</li>
+<li>[Edit] : ノートを編集します。</li>
 </ul>
-<h4>�X�N���[������уY�[��</h4>
+<h4>スクロールおよびズーム</h4>
 <ul>
-<li>[Scroll]���[�h�ł́A�s�A�m���[���̍Đ��ʒu�\���̍s�ȊO�̔C�ӂ̏ꏊ���h���b�O���鎖�ŏ㉺���E�ɃX�N���[�����鎖���ł��܂��B</li>
-<li>[Select]�����[Edit]���[�h�ł́A�ŏ�[�̐������\������Ă���s�����[�̌��Օ����h���b�O���鎖�ŏ㉺���E�ɃX�N���[���ł��܂��B</li>
-<li>Shift�������Ȃ���}�E�X�z�C�[�����񂷂ƍ��E�ɃX�N���[�����܂��B</li>
-<li>Alt�������Ȃ���}�E�X�z�C�[�����񂷂Ə㉺�ɃX�N���[�����܂��B</li>
-<li>���j���[[Zoom(Z/X):]�O���[�v�ɂ���[4/1]�`[1/16]�̃{�^���A�܂��̓V���[�g�J�b�g�L�[(Z)�����(X)�ŉ������̃Y�[�����؂�ւ����܂��B</li>
-<li>Ctrl�����Ȃ���A�܂���(Shift+Alt)�������Ȃ���}�E�X�z�C�[�����񂷂Ɖ������̃Y�[�����؂�ւ����܂�
-(Chrome�ł�Ctrl�������Ȃ���̃}�E�X�z�C�[���̓u���E�U���̂̃Y�[���ɂȂ�܂�)�B</li>
+<li>[Scroll]モードでは、ピアノロールの再生位置表示の行以外の任意の場所をドラッグする事で上下左右にスクロールする事ができます。</li>
+<li>[Select]および[Edit]モードでは、最上端の数字が表示されている行か左端の鍵盤部をドラッグする事で上下左右にスクロールできます。</li>
+<li>Shiftを押しながらマウスホイールを回すと左右にスクロールします。</li>
+<li>Altを押しながらマウスホイールを回すと上下にスクロールします。</li>
+<li>メニュー[Zoom(Z/X):]グループにある[4/1]～[1/16]のボタン、またはショートカットキー(Z)および(X)で横方向のズームが切り替えられます。</li>
+<li>Ctrl押しながら、または(Shift+Alt)を押しながらマウスホイールを回すと横方向のズームが切り替えられます
+(ChromeではCtrlを押しながらのマウスホイールはブラウザ自体のズームになります)。</li>
 </ul>
-<h4>MIDI�C�x���g/�m�[�g�̑I��</h4>
+<h4>MIDIイベント/ノートの選択</h4>
 <ul>
-<li>�P���̑I���F[Select]�܂���[Edit]���[�h�ł̓s�A�m���[����̃m�[�g���N���b�N���ĂP�̃m�[�g��I���ł��܂��B
+<li>単音の選択：[Select]または[Edit]モードではピアノロール上のノートをクリックして１つのノートを選択できます。
 </li>
-<li>�͈͑I���F[Select]���[�h�Ńs�A�m���[����͈̔͂��h���b�O����ƁA�擪�������͈͂Ɋ܂܂�Ă���m�[�g���I������܂��B
+<li>範囲選択：[Select]モードでピアノロール上の範囲をドラッグすると、先頭部分が範囲に含まれているノートが選択されます。
 </li>
-<li>���̑��̑I���F�s�A�m���[�������̃x���V�e�B/MIDI�C�x���g�\�����[�����h���b�O����ƃh���b�O�͈͓���
-���ݕ\������Ă���C�x���g���I������܂��B
-</li>
-</ul>
-<h4>�m�[�g�̓���</h4>
-<ul>
-<li>���[�h��[Edit](�V���[�g�J�b�g:E)�ɂ��āA�s�A�m���[����Ńh���b�O���܂��B</li>
-</ul>
-<h4>�m�[�g/�C�x���g�̍폜</h4>
-<ul>
-<li>�m�[�g��I��������A[Edit:]��[Delete]�{�^���܂���Del�L�[�������܂��B</li>
-</ul>
-<h4>�m�[�g/�C�x���g�̃R�s�[</h4>
-<ul>
-<li>�m�[�g�₻�̑���MIDI�C�x���g��I������[Edit:]��[Copy]�{�^���������A
-���̌�[Paste]�{�^���������ƌ��݂̍Đ��J�[�\���̈ʒu�ɃR�s�[����܂��B</li>
-</ul>
-<h4>�x���V�e�B��R���g���[���`�F���W�Ȃǂ̕ҏW</h4>
-<ul>
-<li>[Edit]���[�h�Ńs�A�m���[���̉����̃��[�����h���b�O���鎖�ŕҏW�ł��܂��B</li>
-<li>�x���V�e�B�̏ꍇ�͌��݂���m�[�g�̃x���V�e�B��ύX���邾���ł����A���̑��̃C�x���g�̏ꍇ��
-�h���b�O���鎖�ŃJ�[�\���̏ꏊ�ɐV���ɃC�x���g���쐬����܂��B���̎��̃C�x���g�̖��x��
-[Grid:]�̐ݒ�ɂ��܂��B
+<li>その他の選択：ピアノロール下側のベロシティ/MIDIイベント表示レーンをドラッグするとドラッグ範囲内で
+現在表示されているイベントが選択されます。
 </li>
 </ul>
-<h2>�V���[�g�J�b�g</h2>
-���̃L�[�{�[�h�V���[�g�J�b�g���g�p�ł��܂��B
+<h4>ノートの入力</h4>
 <ul>
-<li>A    ... Select���[�h</li>
-<li>S    ... Scroll���[�h</li>
-<li>E    ... Edit���[�h</li>
-<li>1    ... �Y�[��1:1</li>
-<li>Z    ... �Y�[���C��</li>
-<li>X    ... �Y�[���A�E�g</li>
-<li>Ctrl-C/command-C ... �I�������C�x���g���R�s�[</li>
-<li>Ctrl-V/command-V ... �Đ��J�[�\���ʒu�Ƀy�[�X�g</li>
-<li>Del ... �I�������C�x���g���폜</li>
+<li>モードを[Edit](ショートカット:E)にして、ピアノロール上でドラッグします。</li>
 </ul>
-<h2>MIDI�L�[�{�[�h����̓���</h2>
-<b>WebSequencer</b>��MIDI�L�[�{�[�h����̃��A���^�C�����͂������I�Ɏ������Ă��܂��B
-���x����萫���܂߂܂����p�I�Ȃ��̂ł͂���܂��񂪁A�ȉ��̎菇�Ŏ����܂��B
-<h4>����</h4>
-<p>����u���E�U�̓l�C�e�B�u��MIDI���͂��T�|�[�g(Web MIDI API)����悤�ɂȂ�悤�ł����A���̏��A
-MIDI�L�[�{�[�h����̓��͂������ɂ́A�uJazz-plugin�v�̃C���X�g�[�����K�v�ł��B
+<h4>ノート/イベントの削除</h4>
+<ul>
+<li>ノートを選択した後、[Edit:]の[Delete]ボタンまたはDelキーを押します。</li>
+</ul>
+<h4>ノート/イベントのコピー</h4>
+<ul>
+<li>ノートやその他のMIDIイベントを選択して[Edit:]の[Copy]ボタンを押し、
+その後[Paste]ボタンを押すと現在の再生カーソルの位置にコピーされます。</li>
+</ul>
+<h4>ベロシティやコントロールチェンジなどの編集</h4>
+<ul>
+<li>[Edit]モードでピアノロールの下部のレーンをドラッグする事で編集できます。</li>
+<li>ベロシティの場合は現在あるノートのベロシティを変更するだけですが、その他のイベントの場合は
+ドラッグする事でカーソルの場所に新たにイベントが作成されます。この時のイベントの密度は
+[Grid:]の設定によります。
+</li>
+</ul>
+<h2>ショートカット</h2>
+次のキーボードショートカットが使用できます。
+<ul>
+<li>A    ... Selectモード</li>
+<li>S    ... Scrollモード</li>
+<li>E    ... Editモード</li>
+<li>1    ... ズーム1:1</li>
+<li>Z    ... ズームイン</li>
+<li>X    ... ズームアウト</li>
+<li>Ctrl-C/command-C ... 選択したイベントをコピー</li>
+<li>Ctrl-V/command-V ... 再生カーソル位置にペースト</li>
+<li>Del ... 選択したイベントを削除</li>
+</ul>
+<h2>MIDIキーボードからの入力</h2>
+<b>WebSequencer</b>はMIDIキーボードからのリアルタイム入力を実験的に実装しています。
+精度や安定性を含めまだ実用的なものではありませんが、以下の手順で試せます。
+<h4>準備</h4>
+<p>今後ブラウザはネイティブにMIDI入力をサポート(Web MIDI API)するようになるようですが、今の所、
+MIDIキーボードからの入力を扱うには、「Jazz-plugin」のインストールが必要です。
 </p>
 <b><a href="http://jazz-soft.net/" target="_blank">Jazz-soft.net</a></b>
 
-<p>��̃y�[�W����_�E�����[�h���ăC���X�g�[�����Ă��������B
-<p>(���F���ɂ���Ă͕s����ɂȂ鎖�����邩���m��܂���B�����m�F���Ă���͈͂ł�Chrome��MIDI�L�[�{�[�h���g������A
-���΂炭���u���Ă����ƃu���E�U���N���b�V�����邱�Ƃ�����܂����B)
+<p>上のページからダウンロードしてインストールしてください。
+<p>(注：環境によっては不安定になる事があるかも知れません。私が確認している範囲ではChromeでMIDIキーボードを使った後、
+しばらく放置しておくとブラウザがクラッシュすることがありました。)
 </p>
-<h4>�g����</h4>
+<h4>使い方</h4>
 <ul>
-<li>�N�������MIDI�@�\�̓I�t�ɂȂ��Ă��܂��B�܂��V�[�P���T�[�㕔��[InitializeMIDI]�̃{�^���������Ă��������B</li>
-<li>�ׂ�[MIDI-in device:]�̑I���{�b�N�X�Ŏg�p����MIDI���̓f�o�C�X��I�����܂��B</li>
-<li>�Đ�/�^���Ȃǂ��s���Ă��Ȃ���Ԃł�MIDI�̓��͂ɂ���Č��ݑI������Ă���g���b�N�̃V���Z�����t�ł��܂��B</li>
-<li>[Rec]�{�^���������ƃK�C�h�N���b�N����A���t�����A���^�C���ɋL�^����܂��B</li>
-<li>�K�C�h�N���b�N�̓��j���[�́uGuideClk�v�{�^����On/Off�ł��܂��B</li>
-<li>�L�^�͌��݂̃g���b�N�̃f�[�^���㏑�����čs���܂��B�͈͂����x�����[�v���ċL�^�����ꍇ�A�Ō��1�������L�^����܂��B</li>
-<li>�L�^�����̂̓m�[�gon/off�A�R���g���[���`�F���W�A�s�b�`�x���h�̃C�x���g�ł��B</li>
+<li>起動直後はMIDI機能はオフになっています。まずシーケンサー上部の[InitializeMIDI]のボタンを押してください。</li>
+<li>隣の[MIDI-in device:]の選択ボックスで使用するMIDI入力デバイスを選択します。</li>
+<li>再生/録音などを行っていない状態でもMIDIの入力によって現在選択されているトラックのシンセを演奏できます。</li>
+<li>[Rec]ボタンを押すとガイドクリックが鳴り、演奏がリアルタイムに記録されます。</li>
+<li>ガイドクリックはメニューの「GuideClk」ボタンでOn/Offできます。</li>
+<li>記録は現在のトラックのデータを上書きして行きます。範囲を何度もループして記録した場合、最後の1周分が記録されます。</li>
+<li>記録されるのはノートon/off、コントロールチェンジ、ピッチベンドのイベントです。</li>
 </ul>
 </div>
 
